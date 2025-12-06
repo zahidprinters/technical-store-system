@@ -1,6 +1,7 @@
 # Technical Store System - Progress Summary
 **Last Updated:** December 6, 2025  
 **Version:** 0.0.1  
+**Repository:** https://github.com/zahidprinters/technical-store-system (Private)  
 **Status:** Phase 0 Complete + Phase 1 Started (Core Masters: 3/8 completed)
 
 ---

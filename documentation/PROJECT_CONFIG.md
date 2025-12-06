@@ -32,6 +32,9 @@ bench --site test.local mariadb
 2. technical_store_system v0.0.1 (This app)
 ```
 
+**Repository:** https://github.com/zahidprinters/technical-store-system (Private)  
+**Branch:** main
+
 ## Storage Configuration
 
 ### Standard File System

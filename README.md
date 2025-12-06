@@ -22,9 +22,13 @@ You can install this app using the [bench](https://github.com/frappe/bench) CLI:
 
 ```bash
 cd $PATH_TO_YOUR_BENCH
-bench get-app $URL_OF_THIS_REPO --branch develop
+bench get-app https://github.com/zahidprinters/technical-store-system --branch main
 bench install-app technical_store_system
 ```
+
+### Repository
+
+**GitHub:** https://github.com/zahidprinters/technical-store-system (Private)
 
 ### Documentation
 
@@ -80,7 +84,7 @@ bench --site [site] backup --with-files
 ### CI/CD
 
 GitHub Actions configured for:
-- **CI**: Unit tests on push to `develop`
+- **CI**: Unit tests on push to `main`
 - **Linters**: [Frappe Semgrep Rules](https://github.com/frappe/semgrep-rules) and [pip-audit](https://pypi.org/project/pip-audit/) on PRs
 
 
