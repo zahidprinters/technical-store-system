@@ -54,7 +54,7 @@ Central configuration for entire application.
 
 **Total Fields:** 43 fields  
 **File:** `setup/doctypes/StoreSettings.py` (263 lines)  
-**Controller:** `setup/doctypes/StoreSettingsController.py` (177 lines)  
+**Controller:** `utils/controllers/store_settings_controller.py` (177 lines)  
 **Client Script:** `setup/client_scripts/StoreSettingsDemoData.py` (200 lines)
 
 #### 3. **Store UOM** (Unit of Measure) ✓
@@ -223,6 +223,19 @@ Four standard roles with appropriate permissions:
 - **Warehouse Staff** - Read/write access, no delete
 - **Store Viewer** - Read-only access
 
+#### 8. **Utils Folder Structure** ✓
+Organized folder for all reusable code:
+- **controllers/** - DocType controllers and API methods (`store_settings_controller.py`)
+- **helpers/** - Utility functions (ready for future helpers)
+- **validators/** - Validation functions (ready for future validators)
+- **README.md** - Comprehensive documentation with usage examples
+
+**Benefits:**
+- Clean separation of concerns
+- Easy to locate and maintain code
+- Scalable structure for growth
+- All imports updated in hooks.py and client scripts
+
 ---
 
 ## 🏗️ Architecture Patterns Established
@@ -274,7 +287,30 @@ def on_doctype_install(force=False):
 - Testing/Training: Click button to add samples
 - Safety: Can only remove if exact counts match (prevents data loss)
 
-### 3. **Client Scripts Auto-Installation**
+### 3. **Utils Folder Organization**
+**Pattern:**
+All reusable code organized in `utils/` with logical subfolders:
+
+```
+utils/
+├── controllers/      # DocType controllers with business logic
+├── helpers/         # Utility functions (formatting, calculations)
+└── validators/      # Validation functions
+```
+
+**Usage:**
+```python
+# Import from utils
+from technical_store_system.utils.controllers.store_settings_controller import StoreSettings
+```
+
+**Benefits:**
+- Clear code organization
+- Easy to locate functionality
+- Scalable structure
+- Documented in utils/README.md
+
+### 4. **Client Scripts Auto-Installation**
 **Pattern:**
 ```python
 # In setup/client_scripts/YourScript.py
@@ -316,7 +352,6 @@ technical_store_system/
 │   ├── doctypes/
 │   │   ├── __init__.py
 │   │   ├── StoreSettings.py (263 lines)           # 43 fields, 6 sections
-│   │   ├── StoreSettingsController.py (177 lines) # Button handlers
 │   │   ├── StoreUOM.py (246 lines)                # 27 demo UOMs
 │   │   ├── StoreItemGroup.py (200+ lines)         # 19 demo groups
 │   │   ├── StoreLocation.py (435 lines)           # 52 fields, 11 demo locations
@@ -328,6 +363,17 @@ technical_store_system/
 │   │
 │   └── workspace/
 │       ├── __init__.py
+│
+├── utils/
+│   ├── __init__.py
+│   ├── README.md                                  # Utils documentation
+│   ├── controllers/
+│   │   ├── __init__.py
+│   │   └── store_settings_controller.py (177 lines) # Whitelisted API methods
+│   ├── helpers/
+│   │   └── __init__.py
+│   └── validators/
+│       └── __init__.py
 │       └── Workspace.py
 │
 ├── technical_store_system/

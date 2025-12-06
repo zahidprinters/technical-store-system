@@ -1150,12 +1150,20 @@ Based on **TECHNICAL_STORE_SINGLE_DOC.md** specification, we use a modular insta
 **2. Setup Modules (Auto-discovered)**
 - `setup/workspace_setup.py` - Workspace lifecycle management
 - `setup/doctypes_setup.py` - Auto-discovers DocTypes from `setup/doctypes/*.py`
+- `setup/client_scripts_setup.py` - Auto-discovers Client Scripts from `setup/client_scripts/*.py`
 - Future: `setup/reports_setup.py`, `setup/dashboards_setup.py`, etc.
 
-**3. DocType Auto-Discovery**
+**3. Utils Folder (Reusable Code)**
+- `utils/controllers/` - DocType controllers with business logic and API methods
+- `utils/helpers/` - Utility functions (formatting, calculations, queries)
+- `utils/validators/` - Validation and business rule functions
+- Documentation: See `utils/README.md` for usage guidelines
+
+**4. DocType Auto-Discovery**
 - Drop any DocType definition file in `setup/doctypes/*.py`
 - Automatically discovered and installed (no installer changes)
 - Pattern: Each DocType = one Python file with full definition
+- Controllers placed in `utils/controllers/` if complex logic needed
 
 #### Current DocTypes (Phase 0 - Foundation Complete)
 
