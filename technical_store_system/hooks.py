@@ -96,12 +96,12 @@ after_migrate = "technical_store_system.installer.after_migrate"
 
 # Override document class for Store Settings
 override_doctype_class = {
-	"Store Settings": "technical_store_system.setup.doctypes.StoreSettingsController.StoreSettings"
+	"Store Settings": "technical_store_system.utils.controllers.store_settings_controller.StoreSettings"
 }
 
 # doc_events = {
 # 	"Store Settings": {
-# 		"validate": "technical_store_system.setup.doctypes.StoreSettingsController.StoreSettings.validate",
+# 		"validate": "technical_store_system.utils.controllers.store_settings_controller.StoreSettings.validate",
 # 	}
 # }
 

@@ -45,7 +45,7 @@ frappe.ui.form.on('Store Settings', {
 					() => {
 						frappe.dom.freeze('Installing demo data...');
 						frappe.call({
-							method: 'technical_store_system.setup.doctypes.StoreSettingsController.install_demo_data',
+							method: 'technical_store_system.utils.controllers.store_settings_controller.install_demo_data',
 							callback: (r) => {
 								frappe.dom.unfreeze();
 								if (r.message && r.message.success) {
@@ -105,7 +105,7 @@ frappe.ui.form.on('Store Settings', {
 					() => {
 						frappe.dom.freeze('Removing demo data...');
 						frappe.call({
-							method: 'technical_store_system.setup.doctypes.StoreSettingsController.uninstall_demo_data',
+							method: 'technical_store_system.utils.controllers.store_settings_controller.uninstall_demo_data',
 							callback: (r) => {
 								frappe.dom.unfreeze();
 								if (r.message && r.message.success) {
