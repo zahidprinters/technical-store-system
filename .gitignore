@@ -1,7 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Frappe
+*.swp
+*.swo
+*~
 .DS_Store
 *.pyc
-*.egg-info
-*.swp
-tags
-node_modules
-__pycache__
+.idea/
+.vscode/
+node_modules/
+.env
+
+# Backup files
+*.bak
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite

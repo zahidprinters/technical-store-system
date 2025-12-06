@@ -1,0 +1,927 @@
+# Technical Store System - AI Development Guidelines
+
+## Project Overview
+Advanced multi-store inventory management system with analytics, mobile integration, vendor management, compliance, and audit trails.
+
+**Framework:** Frappe  
+**Version:** 0.0.1  
+**Python:** >=3.10  
+**Author:** Nadeem (zahid_printers@yahoo.com)  
+**License:** MIT
+
+## CRITICAL: STANDALONE ARCHITECTURE (No ERPNext Dependency)
+
+**App MUST work WITHOUT ERPNext installed.**
+
+### Why Standalone?
+✅ Install anywhere (with or without ERPNext)  
+✅ No breaking changes from ERPNext updates  
+✅ Full control over features  
+✅ Easier to deploy and sell
+
+### Create Our Own DocTypes
+| Instead of ERPNext | We Create |
+|-------------------|-----------|
+| Item | Store Item |
+| Supplier | Store Supplier |
+| UOM | Store UOM |
+| Warehouse | Store Location |
+| Stock Entry | Store Stock Entry |
+| Price List | Store Price List |
+
+### Optional ERPNext Integration
+
+**IMPORTANT**: Integration is OPTIONAL and SAFE - won't break standalone functionality.
+
+#### Implementation Pattern
+```python
+# utils/erpnext_integration.py
+
+import frappe
+
+def is_erpnext_installed():
+	"""Check if ERPNext is available"""
+	return "erpnext" in frappe.get_installed_apps()
+
+def get_erpnext_items():
+	"""Get items from ERPNext if available, else return empty list"""
+	if not is_erpnext_installed():
+		return []
+	
+	try:
+		return frappe.get_all("Item", 
+			fields=["name", "item_name", "stock_uom"],
+			filters={"disabled": 0}
+		)
+	except Exception as e:
+		frappe.log_error(f"ERPNext sync error: {str(e)}")
+		return []
+
+def sync_item_to_erpnext(store_item_doc):
+	"""Optional: Sync Store Item to ERPNext Item"""
+	if not is_erpnext_installed():
+		return
+	
+	settings = frappe.get_single("Store Settings")
+	if not settings.enable_erpnext_sync:
+		return
+	
+	try:
+		# Check if ERPNext Item exists
+		if frappe.db.exists("Item", store_item_doc.name):
+			# Update existing
+			erpnext_item = frappe.get_doc("Item", store_item_doc.name)
+		else:
+			# Create new
+			erpnext_item = frappe.new_doc("Item")
+		
+		# Map fields
+		erpnext_item.item_code = store_item_doc.item_code
+		erpnext_item.item_name = store_item_doc.item_name
+		erpnext_item.save()
+		
+		frappe.msgprint(f"Synced to ERPNext: {erpnext_item.name}")
+	except Exception as e:
+		frappe.log_error(f"ERPNext sync failed: {str(e)}")
+```
+
+#### Usage in DocType Controller
+```python
+# store_item.py
+
+import frappe
+from frappe.model.document import Document
+from technical_store_system.utils.erpnext_integration import is_erpnext_installed, sync_item_to_erpnext
+
+class StoreItem(Document):
+	def on_submit(self):
+		# Core functionality (always runs)
+		self.update_stock_balance()
+		
+		# Optional ERPNext sync (only if enabled)
+		if is_erpnext_installed():
+			sync_item_to_erpnext(self)
+```
+
+#### Add to Store Settings DocType
+```
+Field: enable_erpnext_sync
+Type: Check
+Label: Enable ERPNext Integration
+Description: Sync data with ERPNext if installed
+Default: 0 (unchecked)
+```
+
+#### Safe Integration Checklist
+✅ Always check `is_erpnext_installed()` first  
+✅ Wrap ERPNext calls in try-except  
+✅ Make sync user-configurable (Store Settings)  
+✅ App works perfectly WITHOUT ERPNext  
+✅ Log errors, don't crash app  
+✅ Don't add ERPNext to required_apps
+
+## Project Structure
+```
+technical_store_system/
+├── technical_store_system/     # Main app module
+│   ├── technical_store_system/  # DocTypes directory
+│   ├── config/                  # Desktop/module configuration
+│   ├── public/                  # Static assets (JS/CSS)
+│   ├── templates/               # Jinja templates
+│   ├── www/                     # Web pages
+│   ├── hooks.py                 # App hooks and customizations
+│   ├── modules.txt              # Module definitions
+│   └── patches.txt              # Database migration patches
+├── pyproject.toml               # Python dependencies
+├── README.md                    # Documentation
+└── license.txt                  # MIT License
+```
+
+## Coding Standards
+
+### Indentation (CRITICAL)
+- **Python/JS/CSS/HTML**: TABS (indent_size = 4)
+- **JSON files**: 2 SPACES only
+- See `.editorconfig` for rules
+
+### Naming Conventions
+- **DocTypes**: PascalCase with "Store" prefix → `Store Item`, `Store Location`
+- **Files**: snake_case → `store_item.py`, `mobile_api.py`
+- **Fields**: snake_case → `item_code`, `supplier_name`
+- **Functions**: snake_case → `get_stock_balance()`
+- **Classes**: PascalCase → `StoreItem`
+
+### Line Length
+- Python: 110 characters max
+- Others: 99 characters max
+
+### File Organization
+```
+technical_store_system/technical_store_system/
+├── doctype/[doctype_name]/
+├── report/[report_name]/
+├── page/[page_name]/
+├── api/
+├── utils/
+├── installer.py            # Universal installer (orchestrates all setup)
+├── setup/                  # Modular setup files
+│   ├── workspace/
+│   │   ├── Workspace.py          # Workspace definition
+│   │   └── __init__.py
+│   ├── workspace_setup.py        # Workspace installer
+│   ├── roles_setup.py            # (Future) Roles installer
+│   ├── settings_setup.py         # (Future) Settings installer
+│   └── uom_setup.py              # (Future) UOM installer
+├── fixtures/               # Default data and configurations
+└── public/js/css/
+```
+
+### Installation System
+**IMPORTANT**: Modular installer system with specialized setup files.
+
+```python
+# hooks.py configuration
+after_install = "technical_store_system.installer.after_install"
+after_uninstall = "technical_store_system.installer.after_uninstall"
+after_migrate = "technical_store_system.installer.after_migrate"
+```
+
+When app is installed:
+1. `bench install-app technical_store_system` runs
+2. `after_install` hook triggers
+3. `installer.py` (orchestrator) executes
+4. Calls modular setup files:
+   - workspace_setup.install() → Installs workspace
+   - create_default_roles() → Creates user roles
+   - create_store_settings() → Initializes settings
+   - install_default_uoms() → Creates UOMs
+5. All fixtures installed automatically
+
+When app is uninstalled:
+1. `bench uninstall-app technical_store_system` runs
+2. `after_uninstall` hook triggers
+3. `installer.py` cleanup executes
+4. Calls workspace_setup.uninstall()
+5. App removed cleanly
+
+**Workspace System:**
+- Definition: `setup/workspace/Workspace.py` (shortcuts, cards, links)
+- Installer: `setup/workspace_setup.py` (install/update/uninstall)
+- Orchestrator: `installer.py` calls workspace_setup functions
+
+
+
+## Common Commands
+
+```bash
+# Development
+bench start                                      # Start development server
+bench --site [site] migrate                      # Run migrations
+bench --site [site] clear-cache                  # Clear cache
+bench --site [site] rebuild-doctype-for-desk     # Rebuild desk
+
+# DocType Management
+bench --site [site] new-doctype                  # Create new DocType
+bench --site [site] export-fixtures              # Export fixtures
+
+# Testing
+bench --site [site] run-tests --app technical_store_system
+
+# Build
+bench build --app technical_store_system
+
+# Install/Uninstall
+bench --site [site] install-app technical_store_system
+bench --site [site] uninstall-app technical_store_system
+```
+
+## Automation & Quick Scripts
+
+### One-Liner Shortcuts
+```bash
+# Create DocType and open in editor
+bench --site [site] new-doctype && code technical_store_system/technical_store_system/doctype/
+
+# Export fixtures after changes
+bench --site [site] export-fixtures && bench --site [site] migrate
+
+# Clear cache and rebuild
+bench --site [site] clear-cache && bench --site [site] rebuild-doctype-for-desk
+
+# Run tests and show coverage
+bench --site [site] run-tests --app technical_store_system --coverage
+
+# Quick restart after code changes
+bench restart && bench --site [site] clear-cache
+```
+
+### Shell Aliases (Add to ~/.bashrc or ~/.zshrc)
+```bash
+# Quick bench commands
+alias bstart='bench start'
+alias bmigrate='bench --site [site] migrate'
+alias bcache='bench --site [site] clear-cache'
+alias bconsole='bench --site [site] console'
+alias brestart='bench restart && bench --site [site] clear-cache'
+
+# Development workflow
+alias btest='bench --site [site] run-tests --app technical_store_system'
+alias bbuild='bench build --app technical_store_system'
+```
+
+## Version Control Integration
+
+### Git Workflow
+```bash
+# Create feature branch
+git checkout -b feature/store-item-doctype
+
+# Commit with clear message
+git commit -m "feat: Add Store Item DocType with basic fields"
+
+# Common commit prefixes:
+# feat: New feature
+# fix: Bug fix
+# refactor: Code restructuring
+# docs: Documentation changes
+# test: Adding tests
+# chore: Maintenance tasks
+```
+
+### Tagging Stable Releases
+```bash
+# Tag a stable version
+git tag -a v0.1.0 -m "Release v0.1.0 - Store Item & Location working"
+git push origin v0.1.0
+
+# List all tags
+git tag -l
+
+# Checkout specific version
+git checkout v0.1.0
+```
+
+### Branch Strategy
+```
+main          → Production-ready code
+develop       → Integration branch
+feature/*     → New features (feature/store-item)
+bugfix/*      → Bug fixes (bugfix/stock-calculation)
+hotfix/*      → Urgent fixes (hotfix/critical-error)
+```
+
+### Pre-Commit Checks
+```bash
+# Install pre-commit hooks
+cd apps/technical_store_system
+pre-commit install
+
+# Run manually
+pre-commit run --all-files
+```
+
+## Backup & Restore Strategy
+
+### Database Backups
+```bash
+# Manual backup
+bench --site [site] backup
+
+# Backup with files
+bench --site [site] backup --with-files
+
+# Restore from backup
+bench --site [site] restore [backup-file.sql.gz]
+
+# List available backups
+ls -lh sites/[site]/private/backups/
+```
+
+### ZFS Snapshots (If Using ZFS)
+```bash
+# Create snapshot before major changes
+sudo zfs snapshot zstore/frappe-bench@before-store-item
+
+# List all snapshots
+sudo zfs list -t snapshot
+
+# Rollback to snapshot if something breaks
+sudo zfs rollback zstore/frappe-bench@before-store-item
+
+# Delete old snapshot
+sudo zfs destroy zstore/frappe-bench@before-store-item
+
+# Clone snapshot for testing
+sudo zfs clone zstore/frappe-bench@stable zstore/frappe-bench-test
+```
+
+### Recommended Snapshot Schedule
+```bash
+# Before adding new DocType
+sudo zfs snapshot zstore/frappe-bench@pre-$(date +%Y%m%d-%H%M)
+
+# After successful feature completion
+sudo zfs snapshot zstore/frappe-bench@stable-$(date +%Y%m%d)
+
+# Keep snapshots organized
+# Daily: Keep last 7 days
+# Weekly: Keep last 4 weeks
+# Monthly: Keep last 6 months
+```
+
+### App-Level Backups
+```bash
+# Export app code
+cd ~/frappe-bench/apps
+tar -czf technical_store_system-$(date +%Y%m%d).tar.gz technical_store_system/
+
+# Export fixtures and custom files
+bench --site [site] export-fixtures
+cd sites/[site]
+tar -czf fixtures-$(date +%Y%m%d).tar.gz fixtures/
+```
+
+## Key Modules to Implement
+Based on the app description, consider implementing:
+
+### Core DocTypes (Priority 1)
+1. **Store Location** - Multi-location warehouse management
+2. **Store Item** - Products, variants, SKUs, barcodes
+3. **Store UOM** - Unit of measure (Piece, Box, Kg, etc.)
+4. **Store Supplier** - Vendor/supplier information
+5. **Store Customer** - Customer records (if needed)
+6. **Store Stock Entry** - Stock movements (receipt, transfer, adjustment)
+7. **Store Stock Balance** - Real-time inventory levels per location
+
+### Transactions (Priority 2)
+8. **Store Purchase Order** - Orders to suppliers
+9. **Store Purchase Receipt** - Receiving goods
+10. **Store Sales Invoice** - Sales transactions
+11. **Store Stock Transfer** - Move stock between locations
+12. **Store Stock Adjustment** - Inventory corrections
+
+### Configuration (Priority 3)
+13. **Store Settings** - App configuration, ERPNext integration toggle
+14. **Store Price List** - Item pricing rules
+15. **Store Tax Template** - Tax calculations
+16. **Store Category** - Item categorization
+17. **Store Brand** - Item brands
+
+### Analytics & Reports (Priority 4)
+18. **Stock Summary Report** - Current stock levels
+19. **Stock Movement Report** - Transaction history
+20. **Low Stock Alert Report** - Reorder notifications
+21. **Supplier Performance Report** - Vendor analysis
+22. **Store Analytics Dashboard** - Real-time KPIs
+
+### Mobile & Integration (Priority 5)
+23. **Mobile API endpoints** - REST API for mobile app
+24. **Store Barcode Scanner** - QR/barcode integration
+25. **ERPNext Sync Settings** - Optional sync configuration
+
+### Compliance & Audit (Priority 6)
+26. **Store Audit Log** - Track all changes
+27. **Store Compliance Report** - Regulatory reports
+28. **User Roles**: Store Manager, Warehouse Staff, Inventory Admin, Viewer
+
+
+
+## AI Assistant Guidelines
+
+### CRITICAL RULES - DO NOT BREAK
+
+1. **NEVER modify files without understanding them first**
+   - Always read the full file before making changes
+   - Check related files and dependencies
+   - Understand the Frappe DocType structure
+
+2. **ALWAYS use TABS for indentation** (NOT spaces)
+   - Python files: TABS (indent_size = 4)
+   - JavaScript/CSS/HTML: TABS (indent_size = 4)
+   - JSON files: 2 SPACES only
+   - Check `.editorconfig` for rules
+
+3. **NEVER create files randomly**
+   - Use bench CLI commands for DocTypes: `bench new-doctype`
+   - Ask before creating new modules or directories
+   - Follow Frappe's file structure exactly
+
+4. **ALWAYS keep app STANDALONE - NO ERPNext dependency**
+   - Create our own DocTypes (Store Item, Store Supplier, Store UOM, etc.)
+   - NEVER use ERPNext DocTypes directly (Item, Supplier, UOM)
+   - NEVER add ERPNext to required_apps in hooks.py
+   - Integration with ERPNext is OPTIONAL only if installed
+   - App must work WITHOUT ERPNext installed
+
+5. **ALWAYS validate Frappe conventions**
+   - DocType names: PascalCase (e.g., "Store Location")
+   - File names: snake_case (e.g., "store_location.py")
+   - Field names: snake_case (e.g., "item_code")
+   - Check hooks.py for registered components
+
+6. **NEVER break existing functionality**
+   - Read related code before changes
+   - Test implications of modifications
+   - Keep backwards compatibility
+   - Don't remove code without understanding its purpose
+
+7. **ALWAYS handle errors properly**
+   - Use `frappe.throw()` for validation errors
+   - Add try-except for external calls
+   - Log errors with context
+   - Provide clear error messages
+
+8. **NEVER hardcode values**
+   - Use frappe.db for database queries
+   - Use frappe.get_doc() for document operations
+   - No hardcoded site names or paths
+   - Use configuration/settings DocTypes
+
+9. **ALWAYS check permissions**
+   - Verify user has permission before operations
+   - Use `@frappe.whitelist()` for API methods
+   - Add permission checks in controllers
+   - Document required permissions
+
+### Code Quality
+
+- **Comments**: Explain WHY, not WHAT
+- **Functions**: Max 50 lines, single responsibility
+- **Variables**: Descriptive names (no single letters except loops)
+- **Imports**: Group by: standard libs → frappe → app (blank line between)
+
+### Before Making Changes
+
+1. Read the target file completely
+2. Search for similar patterns in codebase
+3. Check if DocType/module exists
+4. Verify no breaking changes
+5. Consider migration needs
+
+## DEVELOPMENT WORKFLOW - INCREMENTAL APPROACH ⚠️
+
+### Golden Rule: ONE FEATURE AT A TIME
+**NEVER add multiple features together. Build incrementally, test, then add next feature.**
+
+### Step-by-Step Process
+
+#### 1. BEFORE Starting Any New Feature
+```
+✅ Check current working state
+✅ Verify existing features work
+✅ Commit/backup working code
+✅ Document what currently works
+```
+
+#### 2. PLANNING New Feature
+```
+- Discuss with user what to add
+- List files that will be created/modified
+- Explain what will change
+- Get user approval before coding
+```
+
+#### 3. IMPLEMENTING Feature
+```
+- Create ONLY necessary files
+- Add MINIMAL code to make it work
+- NO extra features or "nice to have"
+- Keep existing code UNTOUCHED unless required
+- Add comments explaining new code
+```
+
+#### 4. TESTING After Implementation
+**I will guide user to test:**
+
+a) **Backend Testing**
+```bash
+# Check if app still works
+bench --site [site] migrate
+bench --site [site] clear-cache
+
+# Verify DocType created (if applicable)
+bench --site [site] console
+>>> frappe.get_meta("Store Item")  # Example
+```
+
+b) **UI Testing - What to Check**
+```
+✅ Can you see the new DocType in desk?
+✅ Can you create a new record?
+✅ Do all fields appear correctly?
+✅ Can you save without errors?
+✅ Does list view show records?
+✅ Do filters work?
+✅ Check form layout and styling
+```
+
+c) **Functionality Testing**
+```
+✅ Does validation work? (try invalid data)
+✅ Do calculations work correctly?
+✅ Are permissions working?
+✅ Does it affect existing features?
+✅ Check browser console for JS errors
+✅ Check server logs for Python errors
+```
+
+d) **Integration Testing** (if applicable)
+```
+✅ Does it work with other DocTypes?
+✅ Are linked fields working?
+✅ Do reports show correct data?
+```
+
+#### 5. VERIFICATION Checklist
+```
+User confirms:
+✅ New feature works as expected
+✅ Old features still work (not broken)
+✅ No errors in console/logs
+✅ UI looks good
+✅ Performance is acceptable
+
+If ANY issue found:
+❌ FIX immediately before adding new features
+❌ Don't proceed until stable
+```
+
+#### 6. DOCUMENTATION After Success
+```
+- Update what currently works
+- Document any known limitations
+- Note any dependencies
+- Mark feature as COMPLETE
+```
+
+#### 7. THEN Move to Next Feature
+```
+Repeat process for next feature
+NEVER skip testing phase
+```
+
+### What User Will Test (My Guidance)
+
+When I add a feature, I will tell user:
+
+**"Please test the following:"**
+
+1. **Access**: Go to [Menu Path] → Check if you can access
+2. **Create**: Click New → Fill fields → Save → Check for errors
+3. **View**: Check list view → Verify data shows correctly
+4. **Edit**: Open existing record → Modify → Save → Verify changes
+5. **Delete**: Try to delete (if applicable) → Check behavior
+6. **UI**: Check if layout looks clean and organized
+7. **Console**: Press F12 → Check for red errors
+8. **Logs**: Check bench logs for errors
+
+**User responds:**
+- ✅ "Working" → Proceed to next feature
+- ❌ "Error/Not working" → I fix before moving forward
+- ❓ "Something looks odd" → I investigate
+
+### How to Check Errors
+
+**Browser Console (F12)**
+```javascript
+// Red errors mean JavaScript problems
+// Yellow warnings can be ignored usually
+// Check Network tab for API failures
+```
+
+**Terminal/Bench Logs**
+```bash
+# Watch live logs
+bench --site [site] --verbose
+
+# Check error logs
+tail -f logs/[site]/error.log
+
+# Check bench logs
+tail -f logs/bench.log
+```
+
+**Frappe Error Log**
+```
+Login to desk → Go to:
+Tools → Error Log
+Check recent errors
+```
+
+### Red Flags - Stop Immediately If:
+```
+🛑 White screen of death
+🛑 "Internal Server Error" message
+🛑 Cannot login to desk
+🛑 Cannot access any DocType
+🛑 Bench crashes/won't start
+🛑 Database errors
+🛑 Import errors in Python
+
+→ ROLLBACK changes and debug
+```
+
+### Safe Development Practices
+
+**✅ DO:**
+- Add one DocType at a time
+- Test immediately after adding
+- Keep changes small and focused
+- Ask user to verify each step
+- Document what works
+- Commit after successful feature
+
+**❌ DON'T:**
+- Add multiple DocTypes in one go
+- Assume it works without testing
+- Make big changes across many files
+- Skip user verification
+- Rush to next feature
+- Leave broken code
+
+### Example Feature Addition Flow
+
+```
+ME: "Let's add Store Item DocType. This will create:
+     - Store Item (DocType for products)
+     - Fields: item_name, item_code, description, price
+     
+     Should I proceed?"
+
+USER: "Yes"
+
+ME: [Creates DocType using bench command]
+    [Shows what was created]
+    
+    "Created! Please test:
+     1. Go to Store → Store Item
+     2. Click New
+     3. Fill: Item Name, Item Code
+     4. Click Save
+     5. Check if it saves without error
+     
+     Does it work?"
+
+USER: "Yes, working!" ✅
+
+ME: "Great! Store Item is stable. Next, shall we add Store Location?"
+
+USER: "Yes"
+
+[Repeat process...]
+```
+
+### If Something Breaks
+
+```
+ME: "What error do you see?"
+USER: [Describes error]
+
+ME: "Let me check... 
+     1. Please run: bench --site [site] console
+     2. Paste this: frappe.get_doc('Store Item', 'ITEM-001')
+     3. What output do you get?"
+
+[Debug together until fixed]
+
+ME: "Fixed! Please test again:
+     [Testing steps...]"
+
+USER: "Working now!" ✅
+
+ME: "Perfect. Now it's stable, we can continue."
+```
+
+### Progress Tracking
+
+Keep a checklist:
+```
+✅ Store Item - Working
+✅ Store Location - Working  
+⏳ Store Stock Entry - In Progress
+⬜ Store Supplier - Not Started
+⬜ Store Purchase Order - Not Started
+```
+
+This ensures we NEVER lose track and break working features!
+
+### When Creating New Features
+
+1. Ask user for clarification if unclear
+2. Suggest the proper bench command
+3. Explain what files will be created
+4. Follow Frappe naming conventions
+5. Add to appropriate hooks.py section
+6. Create corresponding test file
+7. **REMEMBER**: Create our own DocTypes (Store Item, Store Supplier, etc.)
+8. **NEVER** use ERPNext DocTypes directly
+9. Add optional ERPNext integration only if user requests it
+10. **Add to fixtures** if it's default data (roles, permissions, settings)
+11. **Update install.py** if fixtures need special installation logic
+
+### When Modifying Code
+
+1. Show the exact changes clearly
+2. Preserve existing indentation style
+3. Don't remove comments unless asked
+4. Keep function signatures compatible
+5. Update related documentation
+
+### When Debugging
+
+1. Ask for error messages/logs
+2. Check browser console if web issue
+3. Verify permissions and roles
+4. Check database schema
+5. Review recent changes
+
+### What to NEVER Do
+
+❌ Change indentation from tabs to spaces  
+❌ Modify core Frappe files  
+❌ Create DocTypes without bench command  
+❌ Bypass Frappe's ORM (use frappe.db methods)  
+❌ Hardcode credentials or sensitive data  
+❌ Remove existing hooks without understanding  
+❌ Modify JSON schema files manually (use Form Builder)  
+❌ Commit to repository without user approval  
+❌ **Use ERPNext DocTypes directly (Item, Supplier, UOM, Warehouse, etc.)**  
+❌ **Add ERPNext to required_apps**  
+❌ **Create dependencies on ERPNext**  
+
+### What to ALWAYS Do
+
+✅ Ask for clarification when unsure  
+✅ Read existing code before suggesting changes  
+✅ Follow Frappe documentation patterns  
+✅ Use proper error handling  
+✅ Add docstrings to functions  
+✅ Test suggestions mentally before providing  
+✅ Preserve existing code style  
+✅ Explain the reasoning behind suggestions  
+✅ **Create standalone DocTypes (Store Item, Store Supplier, Store UOM, etc.)**  
+✅ **Check if ERPNext is installed before any integration**  
+✅ **Make ERPNext integration optional and configurable**  
+
+### Folder Structure
+```
+technical_store_system/
+├── doctype/
+│   ├── store_item/
+│   ├── store_supplier/
+│   ├── store_location/
+│   └── store_stock_entry/
+├── report/
+│   ├── stock_summary/
+│   └── low_stock_alert/
+├── page/
+│   └── store_dashboard/
+├── api/
+│   ├── api.py
+│   ├── mobile_api.py
+│   └── erpnext_sync.py
+├── utils/
+│   ├── barcode_utils.py
+│   ├── stock_utils.py
+│   └── report_utils.py
+└── public/
+    ├── js/
+    └── css/
+```
+
+## Security & Performance
+
+### Security Checklist
+✅ Validate all user input  
+✅ Check permissions before any operation  
+✅ Use `frappe.throw()` for errors  
+✅ Log sensitive operations  
+✅ No plain text passwords
+
+### Performance Tips
+✅ Add db_index=1 to queried fields  
+✅ Use pagination for large lists  
+✅ Cache expensive queries with `frappe.cache()`  
+✅ Use `frappe.enqueue()` for heavy tasks  
+✅ Load specific fields, not entire docs
+
+## Common Frappe Patterns
+
+### Get Document
+```python
+# Get single document
+doc = frappe.get_doc("Store Item", "ITEM-001")
+
+# Get cached document
+doc = frappe.get_cached_doc("Store Item", "ITEM-001")
+
+# Create new document
+doc = frappe.new_doc("Store Item")
+doc.item_name = "Test Item"
+doc.insert()
+```
+
+### Database Queries
+```python
+# Get all records
+items = frappe.get_all("Store Item", 
+	fields=["name", "item_name", "stock_quantity"],
+	filters={"disabled": 0},
+	order_by="item_name asc",
+	limit=100
+)
+
+# Get single value
+qty = frappe.db.get_value("Store Stock Balance", 
+	{"item": "ITEM-001", "location": "LOC-001"}, 
+	"quantity"
+)
+
+# Check if exists
+if frappe.db.exists("Store Item", "ITEM-001"):
+	pass
+
+# Count records
+count = frappe.db.count("Store Item", {"disabled": 0})
+```
+
+### Whitelisted API Methods
+```python
+import frappe
+
+@frappe.whitelist()
+def get_item_stock(item_code):
+	"""Get stock balance for an item across all locations"""
+	# Check permission
+	if not frappe.has_permission("Store Stock Balance", "read"):
+		frappe.throw("Not permitted", frappe.PermissionError)
+	
+	# Validate input
+	if not item_code:
+		frappe.throw("Item code is required")
+	
+	# Query data
+	stock = frappe.get_all("Store Stock Balance",
+		filters={"item": item_code},
+		fields=["location", "quantity", "modified"]
+	)
+	
+	return stock
+```
+
+### Error Handling
+```python
+try:
+	doc.save()
+except frappe.ValidationError as e:
+	frappe.log_error(f"Validation failed: {str(e)}")
+	frappe.throw("Invalid data provided")
+except Exception as e:
+	frappe.log_error(frappe.get_traceback())
+	frappe.throw("An error occurred. Please contact support.")
+```
+
+## Resources
+- [Frappe Framework Documentation](https://frappeframework.com/docs)
+- [Frappe Developer Guide](https://frappeframework.com/docs/user/en/guides)
+- [ERPNext Documentation](https://docs.erpnext.com/) (for optional integration reference)
