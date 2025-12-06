@@ -153,7 +153,6 @@ bench --site [site] run-tests --app technical_store_system
 ### Backup
 ```bash
 bench --site [site] backup --with-files
-sudo zfs snapshot zstore/frappe-bench@snapshot-name
 ```
 
 ## File Organization

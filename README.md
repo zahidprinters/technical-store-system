@@ -73,9 +73,6 @@ pre-commit install
 
 **Before major changes:**
 ```bash
-# ZFS snapshot (if using ZFS)
-sudo zfs snapshot zstore/frappe-bench@before-work
-
 # Database backup
 bench --site [site] backup --with-files
 ```

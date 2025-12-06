@@ -337,38 +337,6 @@ bench --site [site] restore [backup-file.sql.gz]
 ls -lh sites/[site]/private/backups/
 ```
 
-### ZFS Snapshots (If Using ZFS)
-```bash
-# Create snapshot before major changes
-sudo zfs snapshot zstore/frappe-bench@before-store-item
-
-# List all snapshots
-sudo zfs list -t snapshot
-
-# Rollback to snapshot if something breaks
-sudo zfs rollback zstore/frappe-bench@before-store-item
-
-# Delete old snapshot
-sudo zfs destroy zstore/frappe-bench@before-store-item
-
-# Clone snapshot for testing
-sudo zfs clone zstore/frappe-bench@stable zstore/frappe-bench-test
-```
-
-### Recommended Snapshot Schedule
-```bash
-# Before adding new DocType
-sudo zfs snapshot zstore/frappe-bench@pre-$(date +%Y%m%d-%H%M)
-
-# After successful feature completion
-sudo zfs snapshot zstore/frappe-bench@stable-$(date +%Y%m%d)
-
-# Keep snapshots organized
-# Daily: Keep last 7 days
-# Weekly: Keep last 4 weeks
-# Monthly: Keep last 6 months
-```
-
 ### App-Level Backups
 ```bash
 # Export app code

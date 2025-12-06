@@ -46,13 +46,14 @@ bench --site [site] run-tests --app technical_store_system --doctype "Store Item
 
 ### Backup & Restore
 ```bash
-# Backup
+# Backup database with files
 bench --site [site] backup --with-files
-sudo zfs snapshot zstore/frappe-bench@snapshot-name
 
-# Restore
+# List backups
+ls -lh ~/frappe-bench/sites/[site]/private/backups/
+
+# Restore from backup
 bench --site [site] restore [backup-file.sql.gz]
-sudo zfs rollback zstore/frappe-bench@snapshot-name
 ```
 
 ### Git Workflow

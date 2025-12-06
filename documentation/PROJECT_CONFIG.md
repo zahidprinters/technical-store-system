@@ -7,7 +7,7 @@
 - **Architecture**: x86_64
 - **Shell**: bash
 - **User**: erpnext
-- **Installation Type**: Standard (No Docker, No ZFS)
+- **Installation Type**: Standard (No Docker)
 
 ## Frappe Bench Configuration
 
@@ -36,8 +36,7 @@ bench --site test.local mariadb
 
 ### Standard File System
 - **File System**: ext4 (standard Debian 12)
-- **Backup Method**: Database backups + file archives
-- **No ZFS**: Using standard backup methods only
+- **Backup Method**: Database backups + file archives using bench commands
 
 **Backup Commands:**
 ```bash
@@ -1091,7 +1090,7 @@ Before pushing to production:
 When I ask about:
 - **Site commands**: Replace `[site]` with actual site name from config
 - **Paths**: Use full paths starting from `/home/erpnext/frappe-bench/`
-- **Backups**: Use standard database backups (NO ZFS)
+- **Backups**: Use standard bench backup commands
 - **Permissions**: Verify user permissions before file operations
 - **Testing**: Always remind to test after changes
 - **ERPNext**: Check if installed before suggesting integration

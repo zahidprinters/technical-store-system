@@ -18,8 +18,8 @@ bench start
 
 #### 1. Before Starting Work
 ```bash
-# Create backup/snapshot
-sudo zfs snapshot zstore/frappe-bench@before-work-$(date +%Y%m%d)
+# Create database backup
+bench --site [site] backup --with-files
 
 # Create feature branch
 git checkout -b feature/your-feature-name
@@ -267,27 +267,27 @@ bench --site [site] export-doc "Store Settings"
 
 ### Before Major Changes
 ```bash
-# ZFS snapshot
-sudo zfs snapshot zstore/frappe-bench@pre-$(date +%Y%m%d-%H%M)
-
-# Database backup
+# Database backup with files
 bench --site [site] backup --with-files
+
+# Git commit
+git add .
+git commit -m "Before major changes - backup point"
 ```
 
 ### Daily Backups (Automated)
 ```bash
-# Add to crontab
+# Add to crontab for automated daily backups
 0 2 * * * cd ~/frappe-bench && bench --site [site] backup --with-files
-0 3 * * * sudo zfs snapshot zstore/frappe-bench@daily-$(date +\%Y\%m\%d)
 ```
 
 ### Restore If Needed
 ```bash
-# Rollback ZFS snapshot
-sudo zfs rollback zstore/frappe-bench@pre-2025-12-06
-
-# Restore database
+# Restore database from backup
 bench --site [site] restore ~/frappe-bench/sites/[site]/private/backups/[backup-file.sql.gz]
+
+# Or restore specific backup
+bench --site [site] --force restore [path-to-backup]
 ```
 
 ## Git Workflow
