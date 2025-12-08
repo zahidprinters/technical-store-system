@@ -247,10 +247,6 @@ doctype = {
 			"description": "Sample items (future feature)",
 		},
 		{
-			"fieldname": "column_break_demo",
-			"fieldtype": "Column Break",
-		},
-		{
 			"fieldname": "install_demo_data_btn",
 			"label": "Install Selected Demo Data",
 			"fieldtype": "Button",
