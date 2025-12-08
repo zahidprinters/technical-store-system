@@ -214,13 +214,6 @@ doctype = {
 			"fieldtype": "HTML",
 			"options": '<p style="color: #666;">Install sample data for testing and training purposes. Select which data types to install below.</p>',
 		},
-		
-		# Demo Data Selection
-		{
-			"fieldname": "select_demo_data_section",
-			"label": "Select Demo Data to Install",
-			"fieldtype": "Section Break",
-		},
 		{
 			"fieldname": "install_demo_uoms",
 			"label": "UOMs (Units of Measure)",
@@ -236,7 +229,7 @@ doctype = {
 			"description": "19 categories: Electronics, Tools, Consumables, etc.",
 		},
 		{
-			"fieldname": "column_break_demo_select",
+			"fieldname": "column_break_demo",
 			"fieldtype": "Column Break",
 		},
 		{
@@ -253,12 +246,9 @@ doctype = {
 			"default": 0,
 			"description": "Sample items (future feature)",
 		},
-		
-		# Action Buttons
 		{
-			"fieldname": "demo_actions_section",
+			"fieldname": "section_break_demo_actions",
 			"fieldtype": "Section Break",
-			"label": "Actions",
 		},
 		{
 			"fieldname": "install_demo_data_btn",
@@ -267,7 +257,7 @@ doctype = {
 			"description": "Create selected demo data types",
 		},
 		{
-			"fieldname": "column_break_demo",
+			"fieldname": "column_break_demo_btn",
 			"fieldtype": "Column Break",
 		},
 		{
@@ -276,8 +266,6 @@ doctype = {
 			"fieldtype": "Button",
 			"description": "Delete all demo/test data (only works if no transactions exist)",
 		},
-		
-		# Status Display
 		{
 			"fieldname": "section_break_demo_status",
 			"fieldtype": "Section Break",
