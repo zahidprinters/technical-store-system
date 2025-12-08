@@ -1,68 +1,30 @@
 """
 Client Scripts Setup Module
-Auto-discovers and installs all client scripts from setup/client_scripts/
+Universal installer/uninstaller for Client Scripts
+Auto-discovers all client script definitions in setup/client_scripts/
+Delegates all logic to utils/helpers/client_script_handler.py
 """
 
 import os
 import frappe
 import importlib.util
-
-
-def install():
-	"""
-	Install all client scripts from setup/client_scripts/
-	Auto-discovers .py files and creates Client Script DocTypes
-	"""
-	try:
-		print("  → Installing Client Scripts...")
-		
-		# Get all client script definitions
-		scripts = get_all_client_scripts()
-		
-		if not scripts:
-			print("    ℹ No Client Script definitions found")
-			return
-		
-		installed_count = 0
-		for script_def in scripts:
-			script_name = script_def.get("name")
-			
-			# Check if Client Script already exists
-			if frappe.db.exists("Client Script", script_name):
-				print(f"    ℹ Client Script '{script_name}' already exists, skipping...")
-				continue
-			
-			# Create Client Script
-			doc = frappe.new_doc("Client Script")
-			doc.name = script_def.get("name")
-			doc.dt = script_def.get("dt")
-			doc.script_type = script_def.get("script_type", "Form")
-			doc.enabled = script_def.get("enabled", 1)
-			doc.script = script_def.get("script", "")
-			
-			doc.insert(ignore_permissions=True)
-			installed_count += 1
-			print(f"    ✓ Client Script '{script_name}' created successfully")
-		
-		if installed_count > 0:
-			frappe.db.commit()
-			print(f"    ✓ {installed_count} Client Script(s) installed successfully")
-		
-	except Exception as e:
-		print(f"    ✗ Error installing client scripts: {str(e)}")
-		frappe.log_error(frappe.get_traceback(), "Client Scripts Installation Failed")
+from technical_store_system.utils.helpers.client_script_handler import (
+	create_client_script,
+	update_client_script,
+	delete_client_script
+)
 
 
 def get_all_client_scripts():
-	"""
-	Scan setup/client_scripts/ folder and import all client script definitions
-	Returns list of client script dictionaries
-	"""
+	"""Auto-discover all client script definitions from setup/client_scripts/ folder"""
 	scripts = []
 	
 	# Get path to client_scripts folder
-	app_path = frappe.get_app_path("technical_store_system")
-	client_scripts_path = os.path.join(app_path, "setup", "client_scripts")
+	client_scripts_path = os.path.join(
+		frappe.get_app_path("technical_store_system"),
+		"setup",
+		"client_scripts"
+	)
 	
 	if not os.path.exists(client_scripts_path):
 		return scripts
@@ -84,8 +46,7 @@ def get_all_client_scripts():
 			
 			# Get client_script definition
 			if hasattr(module, 'client_script'):
-				script_def = module.client_script
-				scripts.append(script_def)
+				scripts.append(module.client_script)
 		
 		except Exception as e:
 			print(f"    ✗ Error loading {file}: {str(e)}")
@@ -93,26 +54,71 @@ def get_all_client_scripts():
 	return scripts
 
 
+def install():
+	"""Install all Client Scripts - delegates to client_script_handler helper"""
+	try:
+		print("  → Installing Client Scripts...")
+		
+		scripts = get_all_client_scripts()
+		
+		if not scripts:
+			print("    ℹ No Client Script definitions found")
+			return
+		
+		created_count = 0
+		for script_dict in scripts:
+			# Delegate to helper
+			result = create_client_script(script_dict)
+			
+			if result["action"] == "created":
+				created_count += 1
+				print(f"    ✓ {result['message']}")
+			
+			elif result["action"] == "skipped":
+				print(f"    ℹ {result['message']}")
+			
+			elif result["action"] == "failed":
+				print(f"    ✗ {result['message']}")
+		
+		if created_count > 0:
+			print(f"    ✓ {created_count} Client Script(s) installed successfully")
+		
+	except Exception as e:
+		print(f"    ✗ Error installing client scripts: {str(e)}")
+		frappe.log_error(frappe.get_traceback(), "Client Scripts Installation Failed")
+
+
 def uninstall():
-	"""Remove all client scripts created by this app"""
+	"""Remove all Client Scripts - delegates to client_script_handler helper"""
 	try:
 		print("  → Removing Client Scripts...")
 		
 		scripts = get_all_client_scripts()
-		removed_count = 0
 		
-		for script_def in scripts:
-			script_name = script_def.get("name")
-			if frappe.db.exists("Client Script", script_name):
-				frappe.delete_doc("Client Script", script_name, force=1, ignore_permissions=True)
+		if not scripts:
+			print("    ℹ No Client Script definitions found")
+			return
+		
+		removed_count = 0
+		for script_dict in scripts:
+			script_name = script_dict.get("name")
+			
+			# Delegate to helper
+			result = delete_client_script(script_name)
+			
+			if result["action"] == "deleted":
 				removed_count += 1
-				print(f"    ✓ Client Script '{script_name}' removed")
+				print(f"    ✓ {result['message']}")
+			
+			elif result["action"] == "skipped":
+				print(f"    ℹ {result['message']}")
+			
+			elif result["action"] == "failed":
+				print(f"    ✗ {result['message']}")
 		
 		if removed_count > 0:
-			frappe.db.commit()
 			print(f"    ✓ {removed_count} Client Script(s) removed successfully")
-		else:
-			print("    ℹ No Client Scripts to remove")
-	
+		
 	except Exception as e:
 		print(f"    ✗ Error removing client scripts: {str(e)}")
+		frappe.log_error(frappe.get_traceback(), "Client Scripts Uninstallation Failed")

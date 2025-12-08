@@ -6,35 +6,8 @@ Examples:
 - Main Warehouse → Area A → Rack 1 → Shelf 2 → Bin 3
 - Store Room → Section B → Row 5 → Column 3
 
-Demo data stored in: setup/demo_data/store_location.py
-Demo data installed via: utils/helpers/demo_data_handler.py
+Demo data: setup/demo_data/store_location.py
 """
-
-import frappe
-
-
-def on_doctype_install(force=False):
-	"""
-	Called automatically after Store Location DocType is created
-	Creates default demo locations if enabled or force=True
-	"""
-	try:
-		from technical_store_system.utils.helpers.demo_data_handler import install_demo_data_for_doctype
-		
-		print("    → Installing Store Location demo data...")
-		result = install_demo_data_for_doctype("Store Location", force=force)
-		
-		if result["success"]:
-			if result["created"] > 0:
-				print(f"    ✓ {result['message']}")
-			else:
-				print(f"    ℹ {result['message']}")
-		else:
-			print(f"    ℹ {result['message']}")
-		
-	except Exception as e:
-		print(f"    ✗ Error installing Store Location demo data: {str(e)}")
-
 
 doctype = {
 	"name": "Store Location",

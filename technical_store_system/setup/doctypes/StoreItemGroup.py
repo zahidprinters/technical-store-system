@@ -5,35 +5,8 @@ Hierarchical category/classification for items (tree structure)
 Example: Electronics → Computers → Laptops
          Tools → Hand Tools → Screwdrivers
 
-Demo data stored in: setup/demo_data/store_item_group.py
-Demo data installed via: utils/helpers/demo_data_handler.py
+Demo data: setup/demo_data/store_item_group.py
 """
-
-import frappe
-
-
-def on_doctype_install(force=False):
-	"""
-	Called automatically after Store Item Group DocType is created
-	Creates default item groups if demo data is enabled or force=True
-	"""
-	try:
-		from technical_store_system.utils.helpers.demo_data_handler import install_demo_data_for_doctype
-		
-		print("    → Installing Store Item Group demo data...")
-		result = install_demo_data_for_doctype("Store Item Group", force=force)
-		
-		if result["success"]:
-			if result["created"] > 0:
-				print(f"    ✓ {result['message']}")
-			else:
-				print(f"    ℹ {result['message']}")
-		else:
-			print(f"    ℹ {result['message']}")
-		
-	except Exception as e:
-		print(f"    ✗ Error installing Store Item Group demo data: {str(e)}")
-
 
 doctype = {
 	"name": "Store Item Group",
