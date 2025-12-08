@@ -1,10 +1,15 @@
 """
 Store Settings Controller
 Handles button actions and validation for Store Settings
+Uses centralized demo_data_handler for all demo data operations
 """
 
 import frappe
 from frappe.model.document import Document
+from technical_store_system.utils.helpers.demo_data_handler import (
+	get_demo_data_counts,
+	check_demo_data_status
+)
 
 
 class StoreSettings(Document):
@@ -16,12 +21,13 @@ class StoreSettings(Document):
 	
 	def update_demo_data_status(self):
 		"""Update HTML field showing current demo data status"""
-		uom_count = frappe.db.count("Store UOM")
-		group_count = frappe.db.count("Store Item Group")
-		location_count = frappe.db.count("Store Location")
+		status_info = check_demo_data_status()
+		counts = status_info["counts"]
 		
-		# Check if data is demo data or real data (heuristic: demo data has specific counts)
-		is_likely_demo = (uom_count == 27 and group_count == 19 and location_count == 11)
+		uom_count = counts["Store UOM"]["current"]
+		group_count = counts["Store Item Group"]["current"]
+		location_count = counts["Store Location"]["current"]
+		
 		has_data = uom_count > 0 or group_count > 0 or location_count > 0
 		
 		if not has_data:
@@ -31,14 +37,14 @@ class StoreSettings(Document):
 					<small>No UOMs, Item Groups, or Locations exist. Click "Install Demo Data" to create samples.</small>
 				</div>
 			"""
-		elif is_likely_demo:
+		elif status_info["installed"]:
 			status_html = f"""
 				<div style='padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107;'>
 					<strong style='color: #856404;'>⚠️ Demo Data Installed</strong><br>
 					<small>
-						• <strong>{uom_count}</strong> UOMs (27 demo UOMs)<br>
-						• <strong>{group_count}</strong> Item Groups (19 demo groups)<br>
-						• <strong>{location_count}</strong> Locations (11 demo locations)<br>
+						• <strong>{uom_count}</strong> UOMs ({counts["Store UOM"]["expected"]} demo UOMs)<br>
+						• <strong>{group_count}</strong> Item Groups ({counts["Store Item Group"]["expected"]} demo groups)<br>
+						• <strong>{location_count}</strong> Locations ({counts["Store Location"]["expected"]} demo locations)<br>
 						<em>Safe to remove if no transactions exist.</em>
 					</small>
 				</div>
@@ -61,42 +67,39 @@ class StoreSettings(Document):
 
 @frappe.whitelist()
 def install_demo_data():
-	"""Install demo/test data via button click"""
+	"""Install demo/test data via button click - uses centralized handler"""
 	try:
-		# Check if data already exists
-		uom_count = frappe.db.count("Store UOM")
-		group_count = frappe.db.count("Store Item Group")
-		location_count = frappe.db.count("Store Location")
+		from technical_store_system.utils.helpers.demo_data_handler import (
+			install_all_demo_data,
+			check_demo_data_status
+		)
 		
-		if uom_count > 0 or group_count > 0 or location_count > 0:
+		# Check if data already exists
+		status_info = check_demo_data_status()
+		if status_info["status"] != "not_installed":
 			frappe.throw(
-				"Data already exists! Cannot install demo data when UOMs, Item Groups, or Locations exist.<br>"
+				"Data already exists! Cannot install demo data.<br>"
 				"Please remove existing data first or use 'Remove Demo Data' button.",
 				title="Data Already Exists"
 			)
 		
-		# Import installer functions
-		from technical_store_system.setup.doctypes.StoreUOM import on_doctype_install as create_uoms
-		from technical_store_system.setup.doctypes.StoreItemGroup import on_doctype_install as create_groups
-		from technical_store_system.setup.doctypes.StoreLocation import on_doctype_install as create_locations
+		# Install all demo data (force=True bypasses flag check)
+		frappe.publish_realtime('msgprint', 'Installing demo data...', user=frappe.session.user)
+		result = install_all_demo_data(force=True)
 		
-		# Create demo data (force=True bypasses the install_demo_data flag check)
-		frappe.publish_realtime('msgprint', 'Creating demo UOMs...', user=frappe.session.user)
-		create_uoms(force=True)
-		
-		frappe.publish_realtime('msgprint', 'Creating demo Item Groups...', user=frappe.session.user)
-		create_groups(force=True)
-		
-		frappe.publish_realtime('msgprint', 'Creating demo Locations...', user=frappe.session.user)
-		create_locations(force=True)
-		
-		# Commit all changes
-		frappe.db.commit()
-		
-		return {
-			"success": True,
-			"message": "Demo data installed successfully!<br>• 27 UOMs<br>• 19 Item Groups<br>• 11 Locations"
-		}
+		if result["success"]:
+			# Build success message
+			messages = ["Demo data installed successfully!<br>"]
+			for item in result["results"]:
+				if item["result"]["created"] > 0:
+					messages.append(f"• {item['result']['created']} {item['doctype']}")
+			
+			return {
+				"success": True,
+				"message": "<br>".join(messages)
+			}
+		else:
+			frappe.throw("Installation failed. See error log for details.", title="Installation Failed")
 		
 	except Exception as e:
 		frappe.db.rollback()
@@ -106,56 +109,51 @@ def install_demo_data():
 
 @frappe.whitelist()
 def uninstall_demo_data():
-	"""Remove demo/test data via button click"""
+	"""Remove demo/test data via button click - uses centralized handler"""
 	try:
-		# Check for transactions (prevent data loss)
-		# Add transaction checks here when transaction DocTypes are created
+		from technical_store_system.utils.helpers.demo_data_handler import (
+			uninstall_all_demo_data,
+			check_demo_data_status
+		)
 		
-		uom_count = frappe.db.count("Store UOM")
-		group_count = frappe.db.count("Store Item Group")
-		location_count = frappe.db.count("Store Location")
+		# Check if it looks like demo data (safety check)
+		status_info = check_demo_data_status()
 		
-		# Check if it looks like demo data (exact counts)
-		is_demo = (uom_count == 27 and group_count == 19 and location_count == 11)
-		
-		if not is_demo and (uom_count > 0 or group_count > 0 or location_count > 0):
-			frappe.throw(
-				"This doesn't appear to be demo data (counts don't match expected demo data).<br>"
-				f"Current: {uom_count} UOMs, {group_count} Item Groups, {location_count} Locations<br>"
-				"Expected demo data: 27 UOMs, 19 Item Groups, 11 Locations<br><br>"
-				"To prevent accidental data loss, only demo data with exact counts can be auto-removed.",
-				title="Not Demo Data"
-			)
-		
-		if uom_count == 0 and group_count == 0 and location_count == 0:
+		if status_info["status"] == "not_installed":
 			return {
 				"success": True,
 				"message": "No data to remove."
 			}
 		
-		# Delete demo data
-		frappe.publish_realtime('msgprint', 'Removing demo Locations...', user=frappe.session.user)
-		locations = frappe.get_all("Store Location", pluck="name")
-		for loc in locations:
-			frappe.delete_doc("Store Location", loc, force=1, ignore_permissions=True)
+		if status_info["status"] == "partial":
+			counts = status_info["counts"]
+			frappe.throw(
+				"This doesn't appear to be demo data (counts don't match expected demo data).<br><br>"
+				f"Current counts:<br>"
+				f"• {counts['Store UOM']['current']} UOMs (expected {counts['Store UOM']['expected']})<br>"
+				f"• {counts['Store Item Group']['current']} Item Groups (expected {counts['Store Item Group']['expected']})<br>"
+				f"• {counts['Store Location']['current']} Locations (expected {counts['Store Location']['expected']})<br><br>"
+				"To prevent accidental data loss, only demo data with exact counts can be auto-removed.",
+				title="Not Demo Data"
+			)
 		
-		frappe.publish_realtime('msgprint', 'Removing demo Item Groups...', user=frappe.session.user)
-		groups = frappe.get_all("Store Item Group", pluck="name")
-		for group in groups:
-			frappe.delete_doc("Store Item Group", group, force=1, ignore_permissions=True)
+		# Remove all demo data
+		frappe.publish_realtime('msgprint', 'Removing demo data...', user=frappe.session.user)
+		result = uninstall_all_demo_data()
 		
-		frappe.publish_realtime('msgprint', 'Removing demo UOMs...', user=frappe.session.user)
-		uoms = frappe.get_all("Store UOM", pluck="name")
-		for uom in uoms:
-			frappe.delete_doc("Store UOM", uom, force=1, ignore_permissions=True)
-		
-		# Commit deletion
-		frappe.db.commit()
-		
-		return {
-			"success": True,
-			"message": f"Demo data removed successfully!<br>Deleted: {len(uoms)} UOMs, {len(groups)} Item Groups, {len(locations)} Locations"
-		}
+		if result["success"]:
+			# Build success message
+			messages = ["Demo data removed successfully!<br>"]
+			for item in result["results"]:
+				if item["result"]["deleted"] > 0:
+					messages.append(f"• Deleted {item['result']['deleted']} {item['doctype']}")
+			
+			return {
+				"success": True,
+				"message": "<br>".join(messages)
+			}
+		else:
+			frappe.throw("Removal failed. See error log for details.", title="Removal Failed")
 		
 	except Exception as e:
 		frappe.db.rollback()

@@ -5,6 +5,9 @@ Physical location tracking for inventory (warehouse, area, rack, shelf, bin, row
 Examples:
 - Main Warehouse → Area A → Rack 1 → Shelf 2 → Bin 3
 - Store Room → Section B → Row 5 → Column 3
+
+Demo data stored in: setup/demo_data/store_location.py
+Demo data installed via: utils/helpers/demo_data_handler.py
 """
 
 import frappe
@@ -16,56 +19,21 @@ def on_doctype_install(force=False):
 	Creates default demo locations if enabled or force=True
 	"""
 	try:
-		# Skip check if force=True (called from button)
-		if not force:
-			install_demo = frappe.db.get_single_value("Store Settings", "install_demo_data")
-			if not install_demo:
-				print("    ℹ Demo data disabled - skipping default locations")
-				return
+		from technical_store_system.utils.helpers.demo_data_handler import install_demo_data_for_doctype
 		
-		print("    → Creating demo locations...")
-		demo_locations = get_demo_locations()
-		created_count = 0
+		print("    → Installing Store Location demo data...")
+		result = install_demo_data_for_doctype("Store Location", force=force)
 		
-		for loc_data in demo_locations:
-			if not frappe.db.exists("Store Location", loc_data["location_code"]):
-				doc = frappe.new_doc("Store Location")
-				for key, value in loc_data.items():
-					doc.set(key, value)
-				doc.insert(ignore_permissions=True)
-				created_count += 1
-		
-		if created_count > 0:
-			print(f"    ✓ Created {created_count} demo locations")
+		if result["success"]:
+			if result["created"] > 0:
+				print(f"    ✓ {result['message']}")
+			else:
+				print(f"    ℹ {result['message']}")
 		else:
-			print(f"    ℹ All demo locations already exist")
-		
-		frappe.db.commit()
+			print(f"    ℹ {result['message']}")
 		
 	except Exception as e:
-		print(f"    ✗ Error creating demo locations: {str(e)}")
-
-
-def get_demo_locations():
-	"""Returns list of demo locations"""
-	return [
-		# Main Warehouse
-		{"location_code": "WH-MAIN", "location_name": "Main Warehouse", "location_type": "Warehouse", "is_group": 0, "enabled": 1},
-		{"location_code": "WH-MAIN-A", "location_name": "Area A", "location_type": "Area", "parent_location": "WH-MAIN", "zone": "A", "enabled": 1},
-		{"location_code": "WH-MAIN-A-R01", "location_name": "Rack A-01", "location_type": "Rack", "parent_location": "WH-MAIN-A", "zone": "A", "rack": "01", "enabled": 1},
-		{"location_code": "WH-MAIN-A-R01-S1", "location_name": "Shelf 1", "location_type": "Shelf", "parent_location": "WH-MAIN-A-R01", "rack": "01", "shelf": "1", "enabled": 1},
-		{"location_code": "WH-MAIN-A-R01-S2", "location_name": "Shelf 2", "location_type": "Shelf", "parent_location": "WH-MAIN-A-R01", "rack": "01", "shelf": "2", "enabled": 1},
-		
-		# Store Room
-		{"location_code": "STORE-01", "location_name": "Store Room 1", "location_type": "Store Room", "is_group": 0, "enabled": 1},
-		{"location_code": "STORE-01-R1", "location_name": "Row 1", "location_type": "Row", "parent_location": "STORE-01", "row": "1", "enabled": 1},
-		{"location_code": "STORE-01-R1-C1", "location_name": "Column 1", "location_type": "Bin", "parent_location": "STORE-01-R1", "row": "1", "column": "1", "enabled": 1},
-		{"location_code": "STORE-01-R1-C2", "location_name": "Column 2", "location_type": "Bin", "parent_location": "STORE-01-R1", "row": "1", "column": "2", "enabled": 1},
-		
-		# Transit/Staging
-		{"location_code": "TRANSIT", "location_name": "In Transit", "location_type": "Transit", "is_group": 0, "enabled": 1, "description": "Items in transit between locations"},
-		{"location_code": "STAGING", "location_name": "Staging Area", "location_type": "Staging", "is_group": 0, "enabled": 1, "description": "Temporary staging for receiving/dispatch"},
-	]
+		print(f"    ✗ Error installing Store Location demo data: {str(e)}")
 
 
 doctype = {

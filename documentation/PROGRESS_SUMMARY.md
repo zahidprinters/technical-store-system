@@ -1,8 +1,8 @@
 # Technical Store System - Progress Summary
-**Last Updated:** December 6, 2025  
+**Last Updated:** December 8, 2025  
 **Version:** 0.0.1  
 **Repository:** https://github.com/zahidprinters/technical-store-system (Private)  
-**Status:** Phase 0 Complete + Phase 1 Started (Core Masters: 3/8 completed)
+**Status:** Phase 0 Complete + Demo Data System Restructured
 
 ---
 
@@ -226,7 +226,7 @@ Four standard roles with appropriate permissions:
 #### 8. **Utils Folder Structure** ✓
 Organized folder for all reusable code:
 - **controllers/** - DocType controllers and API methods (`store_settings_controller.py`)
-- **helpers/** - Utility functions (ready for future helpers)
+- **helpers/** - Utility functions (`demo_data_handler.py`)
 - **validators/** - Validation functions (ready for future validators)
 - **README.md** - Comprehensive documentation with usage examples
 
@@ -235,6 +235,42 @@ Organized folder for all reusable code:
 - Easy to locate and maintain code
 - Scalable structure for growth
 - All imports updated in hooks.py and client scripts
+
+#### 9. **Centralized Demo Data System** ✓ NEW!
+Complete restructuring of demo/test data management:
+
+**Architecture:**
+```
+setup/demo_data/          ← Pure data files (NO code)
+├── store_uom.py         ← DEMO_UOMS = [27 records]
+├── store_item_group.py  ← DEMO_ITEM_GROUPS = [19 records]
+└── store_location.py    ← DEMO_LOCATIONS = [11 records]
+
+utils/helpers/
+└── demo_data_handler.py  ← ALL logic (install/uninstall)
+```
+
+**Key Features:**
+- ✅ **Clean Separation** - Data files contain ONLY data, no functions
+- ✅ **Centralized Logic** - One handler manages all demo data operations
+- ✅ **Easy to Edit** - Change demo data without touching code
+- ✅ **Scalable** - Add new demo data = create data file + register
+- ✅ **Safe Operations** - Count matching prevents accidental deletion
+- ✅ **Registry System** - Maps DocTypes to data files automatically
+
+**Handler Functions:**
+- `install_demo_data_for_doctype()` - Install for specific DocType
+- `uninstall_demo_data_for_doctype()` - Remove with safety checks
+- `install_all_demo_data()` - Install all registered demo data
+- `uninstall_all_demo_data()` - Remove all demo data
+- `check_demo_data_status()` - Verify installation status
+- `get_demo_data_counts()` - Current vs expected counts
+
+**Integration:**
+- DocTypes use 3-line integration via `on_doctype_install()`
+- Controller buttons call handler functions
+- All demo data operations centralized
+- See: `documentation/DEMO_DATA_SYSTEM.md` for full details
 
 ---
 

@@ -4,6 +4,9 @@ Hierarchical category/classification for items (tree structure)
 
 Example: Electronics → Computers → Laptops
          Tools → Hand Tools → Screwdrivers
+
+Demo data stored in: setup/demo_data/store_item_group.py
+Demo data installed via: utils/helpers/demo_data_handler.py
 """
 
 import frappe
@@ -15,70 +18,21 @@ def on_doctype_install(force=False):
 	Creates default item groups if demo data is enabled or force=True
 	"""
 	try:
-		# Skip check if force=True (called from button)
-		if not force:
-			install_demo = frappe.db.get_single_value("Store Settings", "install_demo_data")
-			if not install_demo:
-				print("    ℹ Demo data disabled - skipping default item groups")
-				return
+		from technical_store_system.utils.helpers.demo_data_handler import install_demo_data_for_doctype
 		
-		print("    → Creating default item groups...")
-		default_groups = get_default_item_groups()
-		created_count = 0
+		print("    → Installing Store Item Group demo data...")
+		result = install_demo_data_for_doctype("Store Item Group", force=force)
 		
-		for group_data in default_groups:
-			if not frappe.db.exists("Store Item Group", group_data["item_group_name"]):
-				doc = frappe.new_doc("Store Item Group")
-				for key, value in group_data.items():
-					doc.set(key, value)
-				doc.insert(ignore_permissions=True)
-				created_count += 1
-		
-		if created_count > 0:
-			print(f"    ✓ Created {created_count} demo item groups")
+		if result["success"]:
+			if result["created"] > 0:
+				print(f"    ✓ {result['message']}")
+			else:
+				print(f"    ℹ {result['message']}")
 		else:
-			print(f"    ℹ All demo item groups already exist")
-		
-		frappe.db.commit()
+			print(f"    ℹ {result['message']}")
 		
 	except Exception as e:
-			print(f"    ✗ Error creating default item groups: {str(e)}")
-
-
-def get_default_item_groups():
-	"""Returns list of default item groups (hierarchical)"""
-	return [
-		# Root groups
-		{"item_group_name": "All Item Groups", "parent_item_group": "", "is_group": 1, "description": "Root group for all items"},
-		
-		# Main categories
-		{"item_group_name": "Electronics", "parent_item_group": "All Item Groups", "is_group": 1, "description": "Electronic items and components"},
-		{"item_group_name": "Tools", "parent_item_group": "All Item Groups", "is_group": 1, "description": "Hand tools and power tools"},
-		{"item_group_name": "Consumables", "parent_item_group": "All Item Groups", "is_group": 1, "description": "Consumable items and supplies"},
-		{"item_group_name": "Spare Parts", "parent_item_group": "All Item Groups", "is_group": 1, "description": "Replacement parts and spares"},
-		{"item_group_name": "Safety Equipment", "parent_item_group": "All Item Groups", "is_group": 1, "description": "Safety gear and equipment"},
-		{"item_group_name": "Office Supplies", "parent_item_group": "All Item Groups", "is_group": 1, "description": "Office and stationery items"},
-		{"item_group_name": "Raw Materials", "parent_item_group": "All Item Groups", "is_group": 1, "description": "Raw materials for production"},
-		
-		# Electronics sub-groups
-		{"item_group_name": "Computers", "parent_item_group": "Electronics", "is_group": 1, "description": "Computer hardware"},
-		{"item_group_name": "Components", "parent_item_group": "Electronics", "is_group": 1, "description": "Electronic components"},
-		{"item_group_name": "Cables & Connectors", "parent_item_group": "Electronics", "is_group": 0, "description": "Cables, wires, connectors"},
-		
-		# Tools sub-groups
-		{"item_group_name": "Hand Tools", "parent_item_group": "Tools", "is_group": 1, "description": "Manual hand tools"},
-		{"item_group_name": "Power Tools", "parent_item_group": "Tools", "is_group": 0, "description": "Electric and pneumatic tools"},
-		{"item_group_name": "Measuring Tools", "parent_item_group": "Tools", "is_group": 0, "description": "Measurement instruments"},
-		
-		# Consumables sub-groups
-		{"item_group_name": "Chemicals", "parent_item_group": "Consumables", "is_group": 0, "description": "Chemical supplies"},
-		{"item_group_name": "Lubricants", "parent_item_group": "Consumables", "is_group": 0, "description": "Oils and lubricants"},
-		{"item_group_name": "Cleaning Supplies", "parent_item_group": "Consumables", "is_group": 0, "description": "Cleaning materials"},
-		
-		# Safety Equipment sub-groups
-		{"item_group_name": "Personal Protective Equipment", "parent_item_group": "Safety Equipment", "is_group": 1, "description": "PPE items"},
-		{"item_group_name": "Fire Safety", "parent_item_group": "Safety Equipment", "is_group": 0, "description": "Fire extinguishers, alarms"},
-	]
+		print(f"    ✗ Error installing Store Item Group demo data: {str(e)}")
 
 
 doctype = {
