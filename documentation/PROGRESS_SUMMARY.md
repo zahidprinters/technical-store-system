@@ -2,15 +2,39 @@
 **Last Updated:** December 8, 2025  
 **Version:** 0.0.1  
 **Repository:** https://github.com/zahidprinters/technical-store-system (Private)  
-**Status:** Phase 0 Complete + Clean Architecture Implemented ✅
+**Status:** Phase 0 Complete + Selective Demo Data ✅
 
 ---
 
 ## 📊 Overall Progress
 
-**Completed:** 3 Core DocTypes + Foundation  
-**In Progress:** Phase 1 - Core Masters  
-**Next:** Store Brand, Store Unit, Enhanced Store Item
+**Completed:** Foundation + Clean Architecture + Selective Demo Data  
+**Ready For:** Phase 1 - Core Masters (Store Brand, Store Unit, Store Item)  
+**Next Step:** Add DocType field update logic, then proceed to Store Brand
+
+---
+
+## 🎯 Latest Updates (December 8, 2025)
+
+### Commit efcfcb0: Clean Architecture Implementation ✅
+- Separated ALL data from logic
+- Created doctype_installer.py (186 lines)
+- Created client_script_handler.py (147 lines)
+- Refactored 5 files to pure data
+- 100% architecture compliance achieved
+
+### Commit 18cff9e: Selective Demo Data Installation ✅
+- Added checkboxes for each data type (UOMs, Groups, Locations, Items)
+- Users can now choose which demo data to install
+- "Install Selected Demo Data" button
+- Updated controller to read selections
+- Improved user feedback
+
+**Current Capabilities:**
+- ✅ Install only UOMs → Creates 27 UOMs only
+- ✅ Install Groups + Locations → Creates 19 + 11 records
+- ✅ Install all → Creates 27 + 19 + 11 records
+- ✅ Install none → Shows validation error
 
 ---
 
