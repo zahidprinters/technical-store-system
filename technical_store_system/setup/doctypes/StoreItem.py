@@ -23,7 +23,6 @@ doctype = {
 			"fieldname": "item_code",
 			"label": "Item Code",
 			"fieldtype": "Data",
-			"reqd": 1,
 			"unique": 1,
 			"read_only": 1,
 			"description": "Auto-generated: ITEM-#####",

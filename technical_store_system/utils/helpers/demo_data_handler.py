@@ -29,6 +29,12 @@ DEMO_DATA_REGISTRY = {
 		"data_var": "DEMO_LOCATIONS",
 		"name_field": "location_code",
 		"count": 11
+	},
+	"Store Item": {
+		"module": "technical_store_system.setup.demo_data.store_item",
+		"data_var": "DEMO_ITEMS",
+		"name_field": "item_name",
+		"count": 16
 	}
 }
 

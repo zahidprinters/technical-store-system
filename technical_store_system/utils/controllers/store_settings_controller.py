@@ -27,38 +27,41 @@ class StoreSettings(Document):
 		uom_count = counts["Store UOM"]["current"]
 		group_count = counts["Store Item Group"]["current"]
 		location_count = counts["Store Location"]["current"]
+		item_count = counts.get("Store Item", {}).get("current", 0)
 		
-		has_data = uom_count > 0 or group_count > 0 or location_count > 0
+		has_data = uom_count > 0 or group_count > 0 or location_count > 0 or item_count > 0
 		
 		if not has_data:
 			status_html = """
 				<div style='padding: 10px; background: #f8f9fa; border-left: 4px solid #6c757d;'>
 					<strong style='color: #6c757d;'>⚪ No Data</strong><br>
-					<small>No UOMs, Item Groups, or Locations exist. Click "Install Demo Data" to create samples.</small>
+					<small>No UOMs, Item Groups, Locations, or Items exist. Click "Install Demo Data" to create samples.</small>
 				</div>
 			"""
 		elif status_info["installed"]:
 			status_html = f"""
 				<div style='padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107;'>
 					<strong style='color: #856404;'>⚠️ Demo Data Installed</strong><br>
-					<small>
-						• <strong>{uom_count}</strong> UOMs ({counts["Store UOM"]["expected"]} demo UOMs)<br>
-						• <strong>{group_count}</strong> Item Groups ({counts["Store Item Group"]["expected"]} demo groups)<br>
-						• <strong>{location_count}</strong> Locations ({counts["Store Location"]["expected"]} demo locations)<br>
-						<em>Safe to remove if no transactions exist.</em>
-					</small>
+				<small>
+					• <strong>{uom_count}</strong> UOMs ({counts["Store UOM"]["expected"]} demo UOMs)<br>
+					• <strong>{group_count}</strong> Item Groups ({counts["Store Item Group"]["expected"]} demo groups)<br>
+					• <strong>{location_count}</strong> Locations ({counts["Store Location"]["expected"]} demo locations)<br>
+					• <strong>{item_count}</strong> Items ({counts.get("Store Item", {}).get("expected", 0)} demo items)<br>
+					<em>Safe to remove if no transactions exist.</em>
+				</small>
 				</div>
 			"""
 		else:
 			status_html = f"""
 				<div style='padding: 10px; background: #d1ecf1; border-left: 4px solid #17a2b8;'>
 					<strong style='color: #0c5460;'>✅ Real Data Exists</strong><br>
-					<small>
-						• <strong>{uom_count}</strong> UOMs<br>
-						• <strong>{group_count}</strong> Item Groups<br>
-						• <strong>{location_count}</strong> Locations<br>
-						<em style='color: #d9534f;'>⚠️ Demo data management disabled to prevent data loss.</em>
-					</small>
+				<small>
+					• <strong>{uom_count}</strong> UOMs<br>
+					• <strong>{group_count}</strong> Item Groups<br>
+					• <strong>{location_count}</strong> Locations<br>
+					• <strong>{item_count}</strong> Items<br>
+					<em style='color: #d9534f;'>⚠️ Demo data management disabled to prevent data loss.</em>
+				</small>
 				</div>
 			"""
 		
@@ -84,13 +87,13 @@ def install_demo_data():
 			selected_doctypes.append("Store Item Group")
 		if settings.install_demo_locations:
 			selected_doctypes.append("Store Location")
-		# Future: if settings.install_demo_items:
-		#     selected_doctypes.append("Store Item")
+		if settings.install_demo_items:
+			selected_doctypes.append("Store Item")
 		
 		if not selected_doctypes:
 			frappe.throw(
 				"Please select at least one data type to install!<br>"
-				"Check the boxes for: UOMs, Item Groups, or Locations.",
+				"Check the boxes for: UOMs, Item Groups, Locations, or Items.",
 				title="No Selection"
 			)
 		

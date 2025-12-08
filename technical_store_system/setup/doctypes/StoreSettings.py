@@ -241,10 +241,10 @@ doctype = {
 		},
 		{
 			"fieldname": "install_demo_items",
-			"label": "Items (Products)",
+			"label": "Items (Store Items)",
 			"fieldtype": "Check",
-			"default": 0,
-			"description": "Sample items (future feature)",
+			"default": 1,
+			"description": "16 sample items: Tools, Safety, Electrical, Mechanical, etc.",
 		},
 		{
 			"fieldname": "install_demo_data_btn",
