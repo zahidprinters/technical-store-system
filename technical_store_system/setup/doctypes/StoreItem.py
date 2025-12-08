@@ -51,8 +51,8 @@ doctype = {
 		{
 			"fieldname": "technical_category",
 			"label": "Technical Category",
-			"fieldtype": "Data",
-			"description": "e.g., Electrical, Mechanical, Consumable",
+			"fieldtype": "Link",
+			"options": "Store Technical Category",
 		},
 		{
 			"fieldname": "description_section",
@@ -128,18 +128,21 @@ doctype = {
 			"label": "Has Serial Number",
 			"fieldtype": "Check",
 			"default": 0,
+			"description": "Track individual serial numbers for this item",
 		},
 		{
 			"fieldname": "has_batch_no",
 			"label": "Has Batch Number",
 			"fieldtype": "Check",
 			"default": 0,
+			"description": "Track batch numbers for this item",
 		},
 		{
 			"fieldname": "has_expiry_date",
 			"label": "Has Expiry Date",
 			"fieldtype": "Check",
 			"default": 0,
+			"description": "Item has expiry date (for batches)",
 		},
 		{
 			"fieldname": "column_break_4",
@@ -157,6 +160,36 @@ doctype = {
 			"fieldtype": "Select",
 			"options": "FIFO\nLIFO\nMoving Average",
 			"default": "FIFO",
+		},
+		
+		# Serial Numbers Section
+		{
+			"fieldname": "serial_numbers_section",
+			"label": "Serial Numbers",
+			"fieldtype": "Section Break",
+			"depends_on": "eval:doc.has_serial_no==1",
+			"collapsible": 1,
+		},
+		{
+			"fieldname": "serial_numbers",
+			"label": "Serial Numbers",
+			"fieldtype": "Table",
+			"options": "Store Item Serial Number",
+		},
+		
+		# Batch Numbers Section
+		{
+			"fieldname": "batch_numbers_section",
+			"label": "Batch Numbers",
+			"fieldtype": "Section Break",
+			"depends_on": "eval:doc.has_batch_no==1",
+			"collapsible": 1,
+		},
+		{
+			"fieldname": "batch_numbers",
+			"label": "Batch Numbers",
+			"fieldtype": "Table",
+			"options": "Store Item Batch Number",
 		},
 		
 		# Opening Stock Section
@@ -183,10 +216,10 @@ doctype = {
 			"default": 0,
 		},
 		
-		# Physical Location Section
+		# Default Location Section
 		{
 			"fieldname": "location_section",
-			"label": "Physical Location",
+			"label": "Default Storage Location",
 			"fieldtype": "Section Break",
 		},
 		{
@@ -194,35 +227,7 @@ doctype = {
 			"label": "Default Location",
 			"fieldtype": "Link",
 			"options": "Store Location",
-		},
-		{
-			"fieldname": "rack",
-			"label": "Rack",
-			"fieldtype": "Data",
-			"description": "Physical rack number",
-		},
-		{
-			"fieldname": "column_break_6",
-			"fieldtype": "Column Break",
-		},
-		{
-			"fieldname": "row",
-			"label": "Row",
-			"fieldtype": "Data",
-		},
-		{
-			"fieldname": "column",
-			"label": "Column",
-			"fieldtype": "Data",
-		},
-		{
-			"fieldname": "column_break_7",
-			"fieldtype": "Column Break",
-		},
-		{
-			"fieldname": "sub_row",
-			"label": "Sub Row",
-			"fieldtype": "Data",
+			"description": "Default storage location (physical location details are in Store Location)",
 		},
 		
 		# Reorder Management Section
