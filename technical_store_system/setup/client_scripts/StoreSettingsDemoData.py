@@ -34,31 +34,47 @@ frappe.ui.form.on('Store Settings', {
 					return;
 				}
 				
+				// Build list of selected items
+				let selected_items = [];
+				if (frm.doc.install_demo_uoms) selected_items.push('• UOMs (27 units)');
+				if (frm.doc.install_demo_item_groups) selected_items.push('• Item Groups (19 categories)');
+				if (frm.doc.install_demo_locations) selected_items.push('• Locations (11 warehouse positions)');
+				
+				if (selected_items.length === 0) {
+					frappe.msgprint({
+						title: 'No Selection',
+						indicator: 'orange',
+						message: 'Please check at least one data type to install:<br>• UOMs<br>• Item Groups<br>• Locations'
+					});
+					return;
+				}
+				
 				// Confirm installation
 				frappe.confirm(
-					'Install demo/test data?<br><br>' +
-					'This will create:<br>' +
-					'• 27 UOMs (Units of Measure)<br>' +
-					'• 19 Item Groups (categories)<br>' +
-					'• 11 Locations (warehouse hierarchy)<br><br>' +
+					'<strong>Install selected demo data?</strong><br><br>' +
+					'Selected data types:<br>' +
+					selected_items.join('<br>') + '<br><br>' +
 					'<em>Use this for testing and training purposes.</em>',
 					() => {
-						frappe.dom.freeze('Installing demo data...');
-						frappe.call({
-							method: 'technical_store_system.utils.controllers.store_settings_controller.install_demo_data',
-							callback: (r) => {
-								frappe.dom.unfreeze();
-								if (r.message && r.message.success) {
-									frappe.show_alert({
-										message: r.message.message,
-										indicator: 'green'
-									}, 5);
-									frm.reload_doc();
+						// Save form first to capture checkbox selections
+						frm.save().then(() => {
+							frappe.dom.freeze('Installing selected demo data...');
+							frappe.call({
+								method: 'technical_store_system.utils.controllers.store_settings_controller.install_demo_data',
+								callback: (r) => {
+									frappe.dom.unfreeze();
+									if (r.message && r.message.success) {
+										frappe.show_alert({
+											message: r.message.message,
+											indicator: 'green'
+										}, 5);
+										frm.reload_doc();
+									}
+								},
+								error: (r) => {
+									frappe.dom.unfreeze();
 								}
-							},
-							error: (r) => {
-								frappe.dom.unfreeze();
-							}
+							});
 						});
 					}
 				);

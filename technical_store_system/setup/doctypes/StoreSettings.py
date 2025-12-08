@@ -212,13 +212,59 @@ doctype = {
 			"fieldname": "demo_data_info",
 			"label": "",
 			"fieldtype": "HTML",
-			"options": "<p style='color: #666;'>Install sample data for testing and training purposes. Buttons will be disabled once real data exists in the system.</p>",
+			"options": "<p style='color: #666;'>Install sample data for testing and training purposes. Select which data types to install below.</p>",
+		},
+		
+		# Demo Data Selection
+		{
+			"fieldname": "select_demo_data_section",
+			"label": "Select Demo Data to Install",
+			"fieldtype": "Section Break",
+		},
+		{
+			"fieldname": "install_demo_uoms",
+			"label": "UOMs (Units of Measure)",
+			"fieldtype": "Check",
+			"default": 1,
+			"description": "27 units: Each, Kg, Liter, Meter, Box, etc.",
+		},
+		{
+			"fieldname": "install_demo_item_groups",
+			"label": "Item Groups (Categories)",
+			"fieldtype": "Check",
+			"default": 1,
+			"description": "19 categories: Electronics, Tools, Consumables, etc.",
+		},
+		{
+			"fieldname": "column_break_demo_select",
+			"fieldtype": "Column Break",
+		},
+		{
+			"fieldname": "install_demo_locations",
+			"label": "Locations (Warehouse Structure)",
+			"fieldtype": "Check",
+			"default": 1,
+			"description": "11 locations: Warehouses, Areas, Racks, Shelves, etc.",
+		},
+		{
+			"fieldname": "install_demo_items",
+			"label": "Items (Products)",
+			"fieldtype": "Check",
+			"default": 0,
+			"description": "Sample items (future feature)",
+		},
+		
+		# Action Buttons
+		{
+			"fieldname": "demo_actions_section",
+			"fieldtype": "Section Break",
+			"label": "Actions",
 		},
 		{
 			"fieldname": "install_demo_data_btn",
-			"label": "Install Demo Data",
+			"label": "Install Selected Demo Data",
 			"fieldtype": "Button",
-			"description": "Create sample UOMs, Item Groups, and Locations",
+			"description": "Create selected demo data types",
 		},
 		{
 			"fieldname": "column_break_demo",
@@ -226,10 +272,12 @@ doctype = {
 		},
 		{
 			"fieldname": "uninstall_demo_data_btn",
-			"label": "Remove Demo Data",
+			"label": "Remove All Demo Data",
 			"fieldtype": "Button",
 			"description": "Delete all demo/test data (only works if no transactions exist)",
 		},
+		
+		# Status Display
 		{
 			"fieldname": "section_break_demo_status",
 			"fieldtype": "Section Break",

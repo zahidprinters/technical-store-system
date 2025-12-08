@@ -67,39 +67,58 @@ class StoreSettings(Document):
 
 @frappe.whitelist()
 def install_demo_data():
-	"""Install demo/test data via button click - uses centralized handler"""
+	"""Install selected demo/test data via button click"""
 	try:
 		from technical_store_system.utils.helpers.demo_data_handler import (
-			install_all_demo_data,
-			check_demo_data_status
+			install_demo_data_for_doctype
 		)
 		
-		# Check if data already exists
-		status_info = check_demo_data_status()
-		if status_info["status"] != "not_installed":
+		# Get Store Settings to check selections
+		settings = frappe.get_single("Store Settings")
+		
+		# Build list of selected DocTypes
+		selected_doctypes = []
+		if settings.install_demo_uoms:
+			selected_doctypes.append("Store UOM")
+		if settings.install_demo_item_groups:
+			selected_doctypes.append("Store Item Group")
+		if settings.install_demo_locations:
+			selected_doctypes.append("Store Location")
+		# Future: if settings.install_demo_items:
+		#     selected_doctypes.append("Store Item")
+		
+		if not selected_doctypes:
 			frappe.throw(
-				"Data already exists! Cannot install demo data.<br>"
-				"Please remove existing data first or use 'Remove Demo Data' button.",
-				title="Data Already Exists"
+				"Please select at least one data type to install!<br>"
+				"Check the boxes for: UOMs, Item Groups, or Locations.",
+				title="No Selection"
 			)
 		
-		# Install all demo data (force=True bypasses flag check)
-		frappe.publish_realtime('msgprint', 'Installing demo data...', user=frappe.session.user)
-		result = install_all_demo_data(force=True)
+		# Install each selected type
+		frappe.publish_realtime('msgprint', f'Installing {len(selected_doctypes)} data type(s)...', user=frappe.session.user)
 		
-		if result["success"]:
-			# Build success message
-			messages = ["Demo data installed successfully!<br>"]
-			for item in result["results"]:
-				if item["result"]["created"] > 0:
-					messages.append(f"• {item['result']['created']} {item['doctype']}")
-			
+		results = []
+		total_created = 0
+		
+		for doctype in selected_doctypes:
+			result = install_demo_data_for_doctype(doctype, force=True)
+			if result["success"] and result["created"] > 0:
+				results.append(f"• {result['created']} {doctype}")
+				total_created += result["created"]
+			elif not result["success"]:
+				frappe.msgprint(f"⚠️ {result['message']}", indicator="orange")
+		
+		if total_created > 0:
+			message = f"<strong>Demo data installed successfully!</strong><br><br>{'<br>'.join(results)}"
 			return {
 				"success": True,
-				"message": "<br>".join(messages)
+				"message": message
 			}
 		else:
-			frappe.throw("Installation failed. See error log for details.", title="Installation Failed")
+			return {
+				"success": True,
+				"message": "No new data was created. Data may already exist."
+			}
 		
 	except Exception as e:
 		frappe.db.rollback()
