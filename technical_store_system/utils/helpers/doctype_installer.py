@@ -79,13 +79,14 @@ def create_doctype(doctype_dict):
 
 def update_doctype(doctype_dict):
 	"""
-	Update an existing DocType
+	Update an existing DocType with new field definitions
+	Compares existing fields with new definition and adds missing fields
 	
 	Args:
 		doctype_dict: Dictionary with DocType configuration
 		
 	Returns:
-		dict: {"success": bool, "message": str, "doctype_name": str}
+		dict: {"success": bool, "message": str, "doctype_name": str, "changes": dict}
 	"""
 	try:
 		doctype_name = doctype_dict.get("name")
@@ -96,17 +97,125 @@ def update_doctype(doctype_dict):
 				"success": False,
 				"message": f"DocType '{doctype_name}' doesn't exist",
 				"doctype_name": doctype_name,
-				"action": "skipped"
+				"action": "skipped",
+				"changes": {}
 			}
 		
-		# For now, just log that DocType exists
-		# Full update logic can be added when needed
-		return {
-			"success": True,
-			"message": f"DocType '{doctype_name}' exists (update logic can be added)",
-			"doctype_name": doctype_name,
-			"action": "checked"
+		# Get existing DocType
+		doc = frappe.get_doc("DocType", doctype_name)
+		
+		# Build map of existing fields by fieldname
+		existing_fields = {field.fieldname: field for field in doc.fields if field.fieldname}
+		
+		# Track changes
+		changes = {
+			"fields_added": [],
+			"fields_updated": [],
+			"properties_updated": []
 		}
+		
+		# Process new field definitions
+		new_fields = doctype_dict.get("fields", [])
+		
+		for new_field in new_fields:
+			fieldname = new_field.get("fieldname")
+			
+			# Skip if no fieldname (section breaks, column breaks, etc. without fieldname)
+			if not fieldname:
+				# Check if this non-fieldname item exists by comparing label and fieldtype
+				exists = False
+				for existing in doc.fields:
+					if (existing.fieldtype == new_field.get("fieldtype") and 
+						existing.label == new_field.get("label")):
+						exists = True
+						break
+				
+				if not exists:
+					# Add new section break, column break, etc.
+					doc.append("fields", new_field)
+					changes["fields_added"].append(f"{new_field.get('fieldtype')} - {new_field.get('label', 'No Label')}")
+				continue
+			
+			# Check if field exists
+			if fieldname in existing_fields:
+				# Field exists - check if properties need updating
+				existing = existing_fields[fieldname]
+				updated_props = []
+				
+				# Compare important properties
+				props_to_check = ["label", "fieldtype", "options", "reqd", "default", 
+								 "description", "read_only", "hidden", "in_list_view"]
+				
+				for prop in props_to_check:
+					new_value = new_field.get(prop)
+					existing_value = getattr(existing, prop, None)
+					
+					# Normalize for comparison (handle int/bool vs string)
+					def normalize_value(val):
+						if val is None:
+							return None
+						# Convert to string for comparison
+						return str(val) if not isinstance(val, str) else val
+					
+					# Update if different and new_value is not None
+					if new_value is not None:
+						norm_new = normalize_value(new_value)
+						norm_existing = normalize_value(existing_value)
+						
+						if norm_new != norm_existing:
+							setattr(existing, prop, new_value)
+							updated_props.append(f"{prop}: {existing_value} → {new_value}")
+				
+				if updated_props:
+					changes["fields_updated"].append(f"{fieldname} ({', '.join(updated_props)})")
+			else:
+				# Field doesn't exist - add it
+				doc.append("fields", new_field)
+				changes["fields_added"].append(fieldname)
+		
+		# Update basic DocType properties if provided
+		basic_props = ["module", "is_submittable", "is_tree", "track_changes", 
+					   "editable_grid", "title_field", "nsm_parent_field"]
+		
+		for prop in basic_props:
+			new_value = doctype_dict.get(prop)
+			if new_value is not None and new_value != getattr(doc, prop, None):
+				old_value = getattr(doc, prop, None)
+				setattr(doc, prop, new_value)
+				changes["properties_updated"].append(f"{prop}: {old_value} → {new_value}")
+		
+		# Check if any changes were made
+		has_changes = (changes["fields_added"] or changes["fields_updated"] or changes["properties_updated"])
+		
+		if has_changes:
+			# Save changes
+			doc.save()
+			frappe.db.commit()
+			
+			# Build summary message
+			summary = []
+			if changes["fields_added"]:
+				summary.append(f"{len(changes['fields_added'])} fields added")
+			if changes["fields_updated"]:
+				summary.append(f"{len(changes['fields_updated'])} fields updated")
+			if changes["properties_updated"]:
+				summary.append(f"{len(changes['properties_updated'])} properties updated")
+			
+			return {
+				"success": True,
+				"message": f"DocType '{doctype_name}' updated: {', '.join(summary)}",
+				"doctype_name": doctype_name,
+				"action": "updated",
+				"changes": changes
+			}
+		else:
+			return {
+				"success": True,
+				"message": f"DocType '{doctype_name}' is up to date (no changes needed)",
+				"doctype_name": doctype_name,
+				"action": "unchanged",
+				"changes": changes
+			}
 		
 	except Exception as e:
 		frappe.log_error(frappe.get_traceback(), f"DocType Update Failed: {doctype_name}")
@@ -114,7 +223,8 @@ def update_doctype(doctype_dict):
 			"success": False,
 			"message": f"Error updating '{doctype_name}': {str(e)}",
 			"doctype_name": doctype_name,
-			"action": "failed"
+			"action": "failed",
+			"changes": {}
 		}
 
 

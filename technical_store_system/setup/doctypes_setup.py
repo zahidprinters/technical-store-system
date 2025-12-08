@@ -100,17 +100,47 @@ def update():
 			print("    ℹ No DocType definitions found")
 			return
 		
-		checked_count = 0
+		updated_count = 0
+		unchanged_count = 0
+		
 		for doctype_dict in doctypes:
 			# Delegate to helper
 			result = update_doctype(doctype_dict)
 			
 			if result["success"]:
-				print(f"    ℹ {result['message']}")
-				checked_count += 1
+				action = result.get("action")
+				
+				if action == "updated":
+					# Show detailed changes
+					print(f"    ✓ {result['message']}")
+					updated_count += 1
+					
+					# Show field details if available
+					changes = result.get("changes", {})
+					if changes.get("fields_added"):
+						for field in changes["fields_added"]:
+							print(f"      + Field added: {field}")
+					if changes.get("fields_updated"):
+						for field in changes["fields_updated"]:
+							print(f"      ~ Field updated: {field}")
+					if changes.get("properties_updated"):
+						for prop in changes["properties_updated"]:
+							print(f"      ~ Property updated: {prop}")
+							
+				elif action == "unchanged":
+					print(f"    ℹ {result['message']}")
+					unchanged_count += 1
+					
+				elif action == "skipped":
+					print(f"    ⚠️ {result['message']}")
+			else:
+				print(f"    ✗ {result['message']}")
 		
-		if checked_count > 0:
-			print(f"    ✓ Checked {checked_count} DocType(s)")
+		# Summary
+		if updated_count > 0:
+			print(f"    ✓ Updated {updated_count} DocType(s)")
+		if unchanged_count > 0:
+			print(f"    ✓ Checked {unchanged_count} DocType(s) (no changes needed)")
 		
 	except Exception as e:
 		print(f"    ✗ Error updating DocTypes: {str(e)}")
