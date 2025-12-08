@@ -212,7 +212,7 @@ doctype = {
 			"fieldname": "demo_data_info",
 			"label": "",
 			"fieldtype": "HTML",
-			"options": "<p style='color: #666;'>Install sample data for testing and training purposes. Select which data types to install below.</p>",
+			"options": '<p style="color: #666;">Install sample data for testing and training purposes. Select which data types to install below.</p>',
 		},
 		
 		# Demo Data Selection
