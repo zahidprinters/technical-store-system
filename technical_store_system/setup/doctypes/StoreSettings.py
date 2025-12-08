@@ -247,8 +247,8 @@ doctype = {
 			"description": "Sample items (future feature)",
 		},
 		{
-			"fieldname": "section_break_demo_actions",
-			"fieldtype": "Section Break",
+			"fieldname": "column_break_demo_2",
+			"fieldtype": "Column Break",
 		},
 		{
 			"fieldname": "install_demo_data_btn",
@@ -257,18 +257,14 @@ doctype = {
 			"description": "Create selected demo data types",
 		},
 		{
-			"fieldname": "column_break_demo_btn",
-			"fieldtype": "Column Break",
-		},
-		{
 			"fieldname": "uninstall_demo_data_btn",
 			"label": "Remove All Demo Data",
 			"fieldtype": "Button",
 			"description": "Delete all demo/test data (only works if no transactions exist)",
 		},
 		{
-			"fieldname": "section_break_demo_status",
-			"fieldtype": "Section Break",
+			"fieldname": "column_break_demo_3",
+			"fieldtype": "Column Break",
 		},
 		{
 			"fieldname": "demo_data_status",
