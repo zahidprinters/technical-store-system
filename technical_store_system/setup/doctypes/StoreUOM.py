@@ -18,7 +18,12 @@ doctype = {
 	"title_field": "uom_name",
 	
 	"fields": [
-		# Section: Basic Information
+		# Tab 1: Basic Information
+		{
+			"fieldname": "basic_info_tab",
+			"label": "Basic Information",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "uom_name",
 			"label": "UOM Name",
@@ -28,14 +33,14 @@ doctype = {
 			"in_list_view": 1,
 			"in_standard_filter": 1,
 			"bold": 1,
-			"description": "Unit of Measure name (e.g., Each, Kg, Liter)"
+			"description": "Unit of Measure name (e.g., Each, Kg, Liter)."
 		},
 		{
 			"fieldname": "uom_symbol",
 			"label": "Symbol",
 			"fieldtype": "Data",
 			"in_list_view": 1,
-			"description": "Short symbol (e.g., Ea, kg, L)"
+			"description": "Short symbol (e.g., Ea, kg, L)."
 		},
 		{
 			"fieldname": "column_break_1",
@@ -54,10 +59,15 @@ doctype = {
 			"label": "Is Default UOM",
 			"fieldtype": "Check",
 			"default": 0,
-			"description": "Set as default UOM for new items"
+			"description": "Set as default UOM for new items."
 		},
 		
-		# Section: Classification
+		# Tab 2: Classification & Conversion
+		{
+			"fieldname": "classification_tab",
+			"label": "Classification & Conversion",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "section_classification",
 			"fieldtype": "Section Break",
@@ -115,12 +125,16 @@ doctype = {
 			"description": "1 [This UOM] = X [Base UOM]"
 		},
 		
-		# Section: Additional Information
+		# Tab 3: Additional Information
+		{
+			"fieldname": "additional_tab",
+			"label": "Additional Information",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "section_additional",
 			"fieldtype": "Section Break",
 			"label": "Additional Information",
-			"collapsible": 1
 		},
 		{
 			"fieldname": "description",

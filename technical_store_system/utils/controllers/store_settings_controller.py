@@ -17,7 +17,24 @@ class StoreSettings(Document):
 	
 	def validate(self):
 		"""Validate and update demo data status before save"""
+		self.check_erpnext_installation()
 		self.update_demo_data_status()
+	
+	def check_erpnext_installation(self):
+		"""Check if ERPNext is installed and update status field"""
+		try:
+			installed_apps = frappe.get_installed_apps()
+			if "erpnext" in installed_apps:
+				self.erpnext_installed = "Installed"
+			else:
+				self.erpnext_installed = "Not Installed"
+				# Disable integration if ERPNext is not installed
+				if self.enable_erpnext_integration:
+					self.enable_erpnext_integration = 0
+		except Exception:
+			self.erpnext_installed = "Not Installed"
+			if self.enable_erpnext_integration:
+				self.enable_erpnext_integration = 0
 	
 	def update_demo_data_status(self):
 		"""Update HTML field showing current demo data status"""

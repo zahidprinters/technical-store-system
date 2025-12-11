@@ -1,6 +1,6 @@
 """
 Store Technical Category DocType Definition
-Classification of items by technical category (Electrical, Mechanical, etc.)
+Classification of items by technical category (e.g., Electrical, Mechanical)
 """
 
 doctype = {
@@ -12,6 +12,12 @@ doctype = {
 	"track_changes": 1,
 	"autoname": "field:category_name",
 	"fields": [
+		# Tab 1: Basic Information
+		{
+			"fieldname": "basic_info_tab",
+			"label": "Basic Information",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "category_name",
 			"label": "Category Name",
@@ -24,6 +30,7 @@ doctype = {
 			"fieldname": "description",
 			"label": "Description",
 			"fieldtype": "Text",
+			"description": "Description of the technical category.",
 		},
 		{
 			"fieldname": "column_break_1",

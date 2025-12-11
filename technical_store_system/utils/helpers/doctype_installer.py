@@ -40,6 +40,7 @@ def create_doctype(doctype_dict):
 		doc.module = doctype_dict.get("module", "Technical Store System")
 		doc.custom = doctype_dict.get("custom", 0)
 		doc.issingle = doctype_dict.get("issingle", 0) or doctype_dict.get("is_single", 0)
+		doc.istable = doctype_dict.get("istable", 0)  # Child table flag
 		doc.is_submittable = doctype_dict.get("is_submittable", 0)
 		doc.is_tree = doctype_dict.get("is_tree", 0)
 		doc.editable_grid = doctype_dict.get("editable_grid", 1)

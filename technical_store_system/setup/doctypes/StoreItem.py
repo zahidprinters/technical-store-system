@@ -13,7 +13,12 @@ doctype = {
 	"autoname": "format:ITEM-{#####}",
 	"title_field": "item_name",
 	"fields": [
-		# Core Identification Section
+		# Tab 1: Basic Information
+		{
+			"fieldname": "basic_info_tab",
+			"label": "Basic Information",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "item_details",
 			"label": "Item Details",
@@ -25,7 +30,7 @@ doctype = {
 			"fieldtype": "Data",
 			"unique": 1,
 			"read_only": 1,
-			"description": "Auto-generated: ITEM-#####",
+			"description": "Auto-generated item code (e.g., ITEM-#####)."
 		},
 		{
 			"fieldname": "item_name",
@@ -94,7 +99,12 @@ doctype = {
 			"default": 0,
 		},
 		
-		# Stock Control Section
+		# Tab 2: Stock Control
+		{
+			"fieldname": "stock_tab",
+			"label": "Stock Control",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "stock_control",
 			"label": "Stock Control",
@@ -161,13 +171,17 @@ doctype = {
 			"default": "FIFO",
 		},
 		
-		# Serial Numbers Section
+		# Tab 3: Inventory Tracking
+		{
+			"fieldname": "tracking_tab",
+			"label": "Inventory Tracking",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "serial_numbers_section",
 			"label": "Serial Numbers",
 			"fieldtype": "Section Break",
 			"depends_on": "eval:doc.has_serial_no==1",
-			"collapsible": 1,
 		},
 		{
 			"fieldname": "serial_numbers",
@@ -264,7 +278,12 @@ doctype = {
 			"description": "Maximum stock allowed",
 		},
 		
-		# Pricing Section
+		# Tab 4: Pricing & Specifications
+		{
+			"fieldname": "pricing_tab",
+			"label": "Pricing & Specifications",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "pricing_section",
 			"label": "Pricing",
@@ -310,12 +329,16 @@ doctype = {
 			"description": "Structured specifications data",
 		},
 		
-		# Identification Section
+		# Tab 5: Identification
+		{
+			"fieldname": "identification_tab",
+			"label": "Barcodes & Identification",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "identification_section",
 			"label": "Barcodes & Identification",
 			"fieldtype": "Section Break",
-			"collapsible": 1,
 		},
 		{
 			"fieldname": "barcode",
@@ -334,7 +357,12 @@ doctype = {
 			"unique": 1,
 		},
 		
-		# Item Type Flags Section
+		# Tab 6: Settings
+		{
+			"fieldname": "settings_tab",
+			"label": "Settings",
+			"fieldtype": "Tab Break",
+		},
 		{
 			"fieldname": "item_type_section",
 			"label": "Item Type",

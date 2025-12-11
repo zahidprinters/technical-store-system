@@ -1,6 +1,6 @@
 """
 Store Item Batch Number Child Table
-Tracks batch numbers for items with batch tracking
+Tracks batch numbers for items with batch tracking.
 """
 
 doctype = {

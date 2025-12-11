@@ -45,7 +45,91 @@ def get_all_doctypes():
 			except Exception as e:
 				print(f"    ⚠️ Error loading {filename}: {str(e)}")
 	
-	return doctypes
+	# Sort by dependencies (child tables first, then parent DocTypes, then DocTypes with dependencies)
+	return sort_doctypes_by_dependencies(doctypes)
+
+
+def sort_doctypes_by_dependencies(doctypes):
+	"""
+	Sort DocTypes by dependencies to ensure proper installation order
+	Uses topological sort to handle complex dependency chains
+	"""
+	# Build dependency graph
+	dependency_map = {}
+	doctype_by_name = {}
+	
+	for dt in doctypes:
+		name = dt.get("name")
+		doctype_by_name[name] = dt
+		dependency_map[name] = get_link_dependencies(dt)
+	
+	# Separate child tables (always first)
+	child_tables = [dt for dt in doctypes if dt.get("istable") == 1]
+	child_table_names = {dt.get("name") for dt in child_tables}
+	
+	# Remove child tables from dependency sorting
+	regular_doctypes = [dt for dt in doctypes if dt.get("istable") != 1]
+	
+	# Topological sort for regular doctypes
+	sorted_doctypes = topological_sort(regular_doctypes, dependency_map)
+	
+	# Return: Child tables first, then sorted DocTypes
+	return child_tables + sorted_doctypes
+
+
+def get_link_dependencies(doctype_dict):
+	"""Get list of DocType names that this DocType depends on"""
+	doctype_name = doctype_dict.get("name", "")
+	dependencies = set()
+	
+	# Check for Link fields to other DocTypes in this app
+	for field in doctype_dict.get("fields", []):
+		if field.get("fieldtype") == "Link":
+			options = field.get("options", "")
+			# Check if it links to another DocType in our app (starts with "Store")
+			if options and options.startswith("Store") and options != doctype_name:
+				dependencies.add(options)
+	
+	return dependencies
+
+
+def topological_sort(doctypes, dependency_map):
+	"""
+	Topological sort to order DocTypes by dependencies
+	DocTypes with no dependencies come first
+	"""
+	sorted_list = []
+	visited = set()
+	visiting = set()
+	
+	def visit(doctype_name):
+		if doctype_name in visited:
+			return
+		if doctype_name in visiting:
+			# Circular dependency - skip
+			return
+		
+		visiting.add(doctype_name)
+		
+		# Visit dependencies first
+		for dep in dependency_map.get(doctype_name, []):
+			if dep in dependency_map:  # Only if dependency is in our list
+				visit(dep)
+		
+		visiting.remove(doctype_name)
+		visited.add(doctype_name)
+		
+		# Find the actual doctype dict
+		for dt in doctypes:
+			if dt.get("name") == doctype_name:
+				sorted_list.append(dt)
+				break
+	
+	# Visit all doctypes
+	for dt in doctypes:
+		visit(dt.get("name"))
+	
+	return sorted_list
 
 
 def install():

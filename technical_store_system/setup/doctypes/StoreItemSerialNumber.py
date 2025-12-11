@@ -1,6 +1,6 @@
 """
 Store Item Serial Number Child Table
-Tracks serial numbers for items with serial tracking
+Tracks serial numbers for items with serial tracking.
 """
 
 doctype = {

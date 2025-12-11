@@ -1,20 +1,20 @@
 ## Technical Store System
 
-An advanced multi-store inventory management system with analytics, mobile integration, vendor management, compliance, and audit trails.
+A complete inventory management system for technical/maintenance stores with hierarchical location tracking, serial/batch management, and multi-UOM support.
 
 **Version:** 0.0.1  
 **Author:** Nadeem  
 **Email:** zahid_printers@yahoo.com  
 **License:** MIT
 
-### Features
+### Key Features
 
-- Multi-store inventory management
-- Advanced analytics and reporting
-- Mobile integration for on-the-go access
-- Comprehensive vendor management
-- Compliance and audit trails
-- Built on Frappe Framework
+- **Hierarchical Location System** - 5-level warehouse structure (Store → Zone → Rack → Shelf → Bin)
+- **Smart Tracking** - Serial numbers and batch tracking with expiry management
+- **Multi-UOM Support** - 27+ units with conversion support
+- **Demo Data** - Complete sample data for testing and training
+- **100% Setup-Based** - No JSON files, pure Python definitions
+- Built on Frappe Framework v15
 
 ### Installation
 
@@ -30,15 +30,41 @@ bench install-app technical_store_system
 
 **GitHub:** https://github.com/zahidprinters/technical-store-system (Private)
 
+### Quick Start
+
+```bash
+# Install the app
+bench get-app https://github.com/zahidprinters/technical-store-system
+bench --site your-site install-app technical_store_system
+
+# Migrate
+bench --site your-site migrate
+
+# Optional: Install demo data
+# Go to: Store Settings → Demo Data tab → Install Demo Data
+```
+
 ### Documentation
 
-- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Command cheat sheet and quick patterns
-- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Complete development workflow and troubleshooting
-- **[.cursorrules](.cursorrules)** - AI assistant guidelines and coding standards
+📖 **[documentation/INDEX.md](documentation/INDEX.md)** ← **START HERE**
 
-### Development Workflow
+**Core Documentation:**
+- **[QUICK_REFERENCE.md](documentation/QUICK_REFERENCE.md)** - Commands & patterns
+- **[DEVELOPMENT.md](documentation/DEVELOPMENT.md)** - Development guide  
+- **[STORE_LOCATION_HIERARCHY.md](documentation/STORE_LOCATION_HIERARCHY.md)** - Location system
+- **[DEMO_DATA_SYSTEM.md](documentation/DEMO_DATA_SYSTEM.md)** - Sample data
+- **[ROADMAP.md](documentation/ROADMAP.md)** - Project phases & timeline ✨
 
-**Important**: This app follows an incremental development approach - ONE feature at a time.
+### Current Status
+
+✅ **Phase 1 Complete** - Foundation ready for transactions
+- 8 DocTypes operational
+- Hierarchical location system (Store → Zone → Rack → Shelf → Bin)
+- Auto-generation of location names with cascading dropdowns
+- Complete demo data system (27 UOMs, 19 groups, 11 locations, 16 items)
+- Client-side filtering for fast UX
+
+🚀 **Next:** Phase 2 - Transaction DocTypes (Receipt, Issue, Requisition)
 
 ```bash
 # Quick start

@@ -94,16 +94,25 @@ after_migrate = "technical_store_system.installer.after_migrate"
 # Document Events
 # ---------------
 
-# Override document class for Store Settings
+# Override document class for controllers
 override_doctype_class = {
-	"Store Settings": "technical_store_system.utils.controllers.store_settings_controller.StoreSettings"
+	"Store Settings": "technical_store_system.utils.controllers.store_settings_controller.StoreSettings",
+	"Store Location": "technical_store_system.utils.controllers.store_location_controller.StoreLocationController"
 }
 
-# doc_events = {
-# 	"Store Settings": {
-# 		"validate": "technical_store_system.utils.controllers.store_settings_controller.StoreSettings.validate",
-# 	}
-# }
+# Document Events - Auto-generate location code and name
+doc_events = {
+	"Store Location": {
+		"before_insert": "technical_store_system.utils.controllers.store_location_controller.before_insert_event",
+		"before_save": "technical_store_system.utils.controllers.store_location_controller.before_save_event",
+	},
+	"Store Item Group": {
+		"before_insert": "technical_store_system.utils.controllers.item_group_controller.before_insert_event",
+		"before_save": "technical_store_system.utils.controllers.item_group_controller.before_save_event",
+		"on_update": "technical_store_system.utils.controllers.item_group_controller.on_update_event",
+		"before_delete": "technical_store_system.utils.controllers.item_group_controller.before_delete_event",
+	}
+}
 
 # Scheduled Tasks
 # ---------------
