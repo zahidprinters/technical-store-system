@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Technical Store System Architecture - System design, technical stack, and infrastructure">
+    <meta name="keywords" content="Frappe, ERPNext, Architecture, Technical Stack, System Design">
+    <meta name="author" content="Technical Store System Team">
+
+    <title>System Architecture - Technical Store System</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="js/dashboard.js" as="script">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                Technical Store System
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="doctypes.html" class="nav-link">
+                    <i class="fas fa-database"></i> DocTypes
+                </a>
+                <a href="architecture.html" class="nav-link active">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </a>
+                <a href="development.html" class="nav-link">
+                    <i class="fas fa-code"></i> Development
+                </a>
+                <a href="api.html" class="nav-link">
+                    <i class="fas fa-plug"></i> API
+                </a>
+                <a href="testing.html" class="nav-link">
+                    <i class="fas fa-vial"></i> Testing
+                </a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">System Architecture</h1>
+            <p class="page-subtitle">Technical foundation and system design principles</p>
+        </div>
+
+        <!-- Technical Stack -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h2 class="section-title">Technical Stack</h2>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-server"></i> Framework & Runtime
+                    </h3>
+                    <div class="feature-description">
+                        <strong>Frappe Framework:</strong> v15.91.0<br>
+                        <strong>Python:</strong> 3.11.2<br>
+                        <strong>Database:</strong> MariaDB 10.11.14 (InnoDB)<br>
+                        <strong>Cache/Queue:</strong> Redis Server (Active)
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-globe"></i> Web Infrastructure
+                    </h3>
+                    <div class="feature-description">
+                        <strong>Web Server:</strong> Nginx (Active)<br>
+                        <strong>OS:</strong> Debian GNU/Linux 12 (Bookworm)<br>
+                        <strong>Process Manager:</strong> systemd<br>
+                        <strong>SSL/TLS:</strong> Let's Encrypt certificates
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-code"></i> Development Tools
+                    </h3>
+                    <div class="feature-description">
+                        <strong>Bench CLI:</strong> v5.27.0<br>
+                        <strong>Git:</strong> Version control<br>
+                        <strong>Pre-commit:</strong> Code quality hooks<br>
+                        <strong>Testing:</strong> pytest framework
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Layers -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h2 class="section-title">Application Layers</h2>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-desktop"></i> Presentation Layer
+                    </h3>
+                    <div class="feature-description">
+                        Frappe Desk web interface with responsive design and mobile optimization. Professional UI with role-based dashboards and intuitive navigation.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-cogs"></i> Business Logic Layer
+                    </h3>
+                    <div class="feature-description">
+                        DocTypes with comprehensive validation rules, workflows, and event-driven business logic. Controller pattern for complex operations.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-database"></i> Data Layer
+                    </h3>
+                    <div class="feature-description">
+                        Hierarchical data models with referential integrity, audit trails, and optimized indexing. ACID compliance with InnoDB engine.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-plug"></i> Integration Layer
+                    </h3>
+                    <div class="feature-description">
+                        REST API, webhooks, ERPNext sync, and third-party connectors. Event-driven architecture with real-time notifications.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-chart-bar"></i> Analytics Layer
+                    </h3>
+                    <div class="feature-description">
+                        BI dashboards, reporting engine, and predictive analytics. Real-time KPIs with drill-down capabilities and automated alerts.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Architecture -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h2 class="section-title">Code Architecture & File Structure</h2>
+            </div>
+
+            <div class="code-header">Core Application Structure</div>
+            <div class="code-block with-header">
+technical_store_system/
+├── hooks.py                          # Frappe hooks and event registrations
+├── installer.py                      # Universal installer with auto-discovery
+├── modules.txt                       # Frappe module definitions
+├── patches.txt                       # Database patches
+├── setup/
+│   ├── doctypes/                     # DocType definitions (8 files)
+│   │   ├── StoreSettings.py          # 46 fields, 7 tabs
+│   │   ├── StoreUOM.py               # 15 fields, 3 tabs
+│   │   ├── StoreItemGroup.py         # 25 fields, 4 tabs (tree)
+│   │   ├── StoreTechnicalCategory.py # 4 fields, 1 tab
+│   │   ├── StoreLocation.py          # 28 fields, 2 tabs
+│   │   ├── StoreItem.py              # 64 fields, 6 tabs
+│   │   ├── StoreItemSerialNumber.py  # 5 fields (child table)
+│   │   └── StoreItemBatchNumber.py   # 5 fields (child table)
+│   ├── client_scripts/               # UI enhancements
+│   ├── demo_data/                    # Sample data (auto-generated)
+│   ├── workspace/                    # Custom workspace
+│   └── doctypes_setup.py             # Auto-discovery installer
+├── utils/
+│   ├── controllers/                  # Business logic controllers
+│   ├── helpers/                      # Utility functions
+│   └── validators/                   # Validation logic
+└── technical_store_system/           # Generated DocType files
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-magic"></i> Auto-Discovery Pattern
+                    </h3>
+                    <div class="feature-description">
+                        Revolutionary installer that automatically finds and installs DocTypes. No manual updates needed - just add files to setup/doctypes/ and run migrate.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-robot"></i> Event-Driven Architecture
+                    </h3>
+                    <div class="feature-description">
+                        Frappe hooks for business logic with comprehensive event registration. Clean separation of concerns with modular event handlers.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-shield-alt"></i> Controller Pattern
+                    </h3>
+                    <div class="feature-description">
+                        Dedicated controller classes for complex business logic. StoreLocationController (579 lines) handles auto-generation and validation.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h2 class="section-title">Infrastructure</h2>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-database"></i> Database Design
+                    </h3>
+                    <div class="feature-description">
+                        <strong>Engine:</strong> InnoDB (ACID compliance)<br>
+                        <strong>Charset:</strong> utf8mb4<br>
+                        <strong>Indexing:</strong> Optimized for common queries<br>
+                        <strong>Integrity:</strong> Foreign key constraints
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-shield-alt"></i> Security Architecture
+                    </h3>
+                    <div class="feature-description">
+                        <strong>Authentication:</strong> Role-based access control<br>
+                        <strong>Authorization:</strong> Field-level permissions<br>
+                        <strong>Encryption:</strong> Data at rest and in transit<br>
+                        <strong>Audit:</strong> Complete change tracking
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-sync"></i> Backup & Recovery
+                    </h3>
+                    <div class="feature-description">
+                        <strong>Strategy:</strong> Automated daily backups<br>
+                        <strong>Retention:</strong> Point-in-time recovery<br>
+                        <strong>Integrity:</strong> Pre/post backup validation<br>
+                        <strong>Storage:</strong> Encrypted offsite backup
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="doctypes.html" class="footer-link">
+                        <i class="fas fa-database"></i> DocTypes
+                    </a>
+                    <a href="architecture.html" class="footer-link">
+                        <i class="fas fa-sitemap"></i> Architecture
+                    </a>
+                    <a href="development.html" class="footer-link">
+                        <i class="fas fa-code"></i> Development
+                    </a>
+                    <a href="api.html" class="footer-link">
+                        <i class="fas fa-plug"></i> API
+                    </a>
+                    <a href="testing.html" class="footer-link">
+                        <i class="fas fa-vial"></i> Testing
+                    </a>
+                </div>
+                <p>
+                    <i class="fas fa-code"></i>
+                    Technical Store System - System Architecture |
+                    <a href="https://github.com/zahidprinters/technical-store-system" target="_blank" class="footer-link">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a> |
+                    Updated: December 11, 2025
+                </p>
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script src="js/main.js"></script>
+        <script src="js/dashboard.js"></script>
+    </div>
+</body>
+</html>

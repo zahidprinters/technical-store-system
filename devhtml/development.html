@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Technical Store System Development Guide - Best practices, workflows, and implementation details">
+    <meta name="keywords" content="Frappe, ERPNext, Development, Technical Store, Best Practices">
+    <meta name="author" content="Technical Store System Team">
+
+    <title>Development Guide - Technical Store System</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="js/dashboard.js" as="script">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                Technical Store System
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="doctypes.html" class="nav-link">
+                    <i class="fas fa-database"></i> DocTypes
+                </a>
+                <a href="architecture.html" class="nav-link">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </a>
+                <a href="roadmap.html" class="nav-link">
+                    <i class="fas fa-road"></i> Roadmap
+                </a>
+                <a href="development.html" class="nav-link active">
+                    <i class="fas fa-code"></i> Development
+                </a>
+                <a href="api.html" class="nav-link">
+                    <i class="fas fa-plug"></i> API
+                </a>
+                <a href="testing.html" class="nav-link">
+                    <i class="fas fa-vial"></i> Testing
+                </a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Development Guide</h1>
+            <p class="page-subtitle">Complete development workflow and best practices</p>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h2 class="section-title">Getting Started</h2>
+            </div>
+
+            <div class="step-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Environment Setup</h3>
+                    <p class="step-description">
+                        Install Frappe Framework v15+, Python 3.11, and MariaDB.
+                        Set up your development bench and install the app.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">App Installation</h3>
+                    <p class="step-description">
+                        Clone the repository and install the app in your bench.
+                        Run migrations to create all DocTypes automatically.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Demo Data</h3>
+                    <p class="step-description">
+                        Install demo data to see the system in action.
+                        Explore all 8 production-ready DocTypes.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Development</h3>
+                    <p class="step-description">
+                        Start developing new features using the auto-discovery pattern.
+                        Add DocTypes, modify existing ones, and extend functionality.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auto-Discovery Pattern -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h2 class="section-title">Auto-Discovery Pattern</h2>
+            </div>
+
+            <p>
+                The revolutionary auto-discovery installer automatically finds and installs DocTypes.
+                No manual updates needed - just add files to <code class="highlight">setup/doctypes/</code> and run migrate.
+            </p>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('create')">Create DocType</button>
+                <button class="tab" onclick="showTab('install')">Install Process</button>
+                <button class="tab" onclick="showTab('migrate')">Migration</button>
+            </div>
+
+            <div id="create" class="tab-content active">
+                <div class="code-header">setup/doctypes/YourDocType.py</div>
+                <div class="code-block with-header">
+doctype = {
+    "name": "Your DocType",
+    "fields": [
+        {
+            "fieldname": "field_name",
+            "fieldtype": "Data",
+            "label": "Field Label",
+            "reqd": 1
+        },
+        {
+            "fieldname": "description",
+            "fieldtype": "Text",
+            "label": "Description"
+        }
+    ],
+    "permissions": [
+        {
+            "role": "Store Manager",
+            "read": 1,
+            "write": 1,
+            "create": 1
+        }
+    ]
+}
+                </div>
+            </div>
+
+            <div id="install" class="tab-content">
+                <div class="code-header">Installation Process</div>
+                <div class="code-block with-header">
+# The installer automatically discovers all .py files in setup/doctypes/
+# and installs them as DocTypes
+
+def install_doctypes():
+    """Auto-discover and install all DocTypes"""
+    doctype_files = get_doctypes_from_setup()
+
+    for doctype_file in doctype_files:
+        doctype_config = load_doctype_config(doctype_file)
+        create_or_update_doctype(doctype_config)
+
+# That's it! No manual registration needed.
+                </div>
+            </div>
+
+            <div id="migrate" class="tab-content">
+                <div class="command">
+                    <div class="command-title">Run Migration</div>
+                    bench --site your-site.local migrate
+                </div>
+                <p>
+                    The migration command automatically discovers new DocTypes in <code class="highlight">setup/doctypes/</code>
+                    and installs them. Existing DocTypes are updated with new fields and permissions.
+                </p>
+            </div>
+        </div>
+
+        <!-- File Structure -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-folder-tree"></i>
+                </div>
+                <h2 class="section-title">Project Structure</h2>
+            </div>
+
+            <div class="file-structure">
+technical_store_system/
+├── setup/
+│   ├── doctypes/           # Auto-discovered DocTypes
+│   │   ├── StoreItem.py
+│   │   ├── StoreLocation.py
+│   │   └── ...
+│   ├── client_scripts/     # Client-side JavaScript
+│   ├── demo_data/         # Demo data installers
+│   └── workspace/         # Desk workspace setup
+├── technical_store_system/
+│   ├── doctype/           # Server-side DocType logic
+│   └── ...
+├── utils/
+│   ├── controllers/       # Business logic controllers
+│   ├── helpers/          # Utility functions
+│   └── validators/       # Data validation
+└── hooks.py              # Frappe hooks configuration
+            </div>
+        </div>
+
+        <!-- Development Workflow -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h2 class="section-title">Development Workflow</h2>
+            </div>
+
+            <div class="step-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Plan Your DocType</h3>
+                    <p class="step-description">
+                        Design your DocType structure, fields, and relationships.
+                        Consider validation rules and business logic requirements.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Create DocType File</h3>
+                    <p class="step-description">
+                        Add your DocType definition to setup/doctypes/YourDocType.py
+                        using the standard Frappe DocType JSON format.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Add Business Logic</h3>
+                    <p class="step-description">
+                        Create server-side methods in technical_store_system/doctype/
+                        for validation, calculations, and workflow management.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Client Scripts</h3>
+                    <p class="step-description">
+                        Add client-side JavaScript in setup/client_scripts/
+                        for enhanced UX, field dependencies, and form behavior.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3 class="step-title">Test & Migrate</h3>
+                    <p class="step-description">
+                        Test your changes locally, then run bench migrate
+                        to deploy to your development site.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <h3 class="step-title">Demo Data</h3>
+                    <p class="step-description">
+                        Create demo data installer in setup/demo_data/
+                        to showcase your new DocType functionality.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="section-title">Best Practices</h2>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="feature-title">Auto-Discovery</h3>
+                    <p class="feature-description">
+                        Always use the auto-discovery pattern. Never manually register DocTypes.
+                        Just add .py files to setup/doctypes/ and run migrate.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Security First</h3>
+                    <p class="feature-description">
+                        Implement proper role-based permissions. Use field-level permissions
+                        for sensitive data. Always validate user input.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Clean Code</h3>
+                    <p class="feature-description">
+                        Follow Python and JavaScript best practices. Use meaningful variable names,
+                        add comments, and maintain consistent formatting.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3 class="feature-title">Test Everything</h3>
+                    <p class="feature-description">
+                        Write unit tests for business logic. Test client scripts thoroughly.
+                        Use demo data to validate end-to-end workflows.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="feature-title">Documentation</h3>
+                    <p class="feature-description">
+                        Document your DocTypes, methods, and workflows. Update README files
+                        and maintain clear code comments.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="feature-title">Data Integrity</h3>
+                    <p class="feature-description">
+                        Use proper field types and validation. Implement referential integrity
+                        with Link fields. Handle data migrations carefully.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Commands -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <h2 class="section-title">Common Commands</h2>
+            </div>
+
+            <div class="command">
+                <div class="command-title">Install App</div>
+                bench --site your-site.local install-app technical_store_system
+            </div>
+
+            <div class="command">
+                <div class="command-title">Run Migrations</div>
+                bench --site your-site.local migrate
+            </div>
+
+            <div class="command">
+                <div class="command-title">Clear Cache</div>
+                bench --site your-site.local clear-cache
+            </div>
+
+            <div class="command">
+                <div class="command-title">Start Development Server</div>
+                bench start
+            </div>
+
+            <div class="command">
+                <div class="command-title">Install Demo Data</div>
+                bench --site your-site.local execute technical_store_system.setup.demo_data.install_demo_data
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h2 class="section-title">Troubleshooting</h2>
+            </div>
+
+            <div class="warning">
+                <div class="warning-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Migration Errors
+                </div>
+                <p>
+                    If migrations fail, check the bench logs. Common issues: syntax errors in DocType files,
+                    missing dependencies, or database permission problems.
+                </p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i>
+                    Permission Issues
+                </div>
+                <p>
+                    Make sure your user has the required roles. Check DocType permissions in the
+                    DocType definition and ensure proper role assignment.
+                </p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i>
+                    Cache Problems
+                </div>
+                <p>
+                    If changes don't appear, clear the cache with <code class="highlight">bench clear-cache</code>
+                    and restart the bench with <code class="highlight">bench start</code>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-nav">
+        <div class="footer-nav-content">
+            <div class="footer-nav-grid">
+                <div class="footer-nav-section">
+                    <h4>Project</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="index.html">Dashboard</a></li>
+                        <li><a href="doctypes.html">DocTypes</a></li>
+                        <li><a href="architecture.html">Architecture</a></li>
+                        <li><a href="roadmap.html">Roadmap</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="api.html">API</a></li>
+                        <li><a href="testing.html">Testing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Resources</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://github.com/zahidprinters/technical-store-system" target="_blank">GitHub Repository</a></li>
+                        <li><a href="https://frappeframework.com" target="_blank">Frappe Framework</a></li>
+                        <li><a href="https://erpnext.com" target="_blank">ERPNext</a></li>
+                        <li><a href="https://docs.frappeframework.com" target="_blank">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Community</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://discuss.frappe.io" target="_blank">Frappe Discuss</a></li>
+                        <li><a href="https://github.com/frappe" target="_blank">GitHub</a></li>
+                        <li><a href="https://frappe.school" target="_blank">Frappe School</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <i class="fas fa-code"></i>
+                    Technical Store System - Development Guide |
+                    <a href="https://github.com/zahidprinters/technical-store-system" target="_blank">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a> |
+                    Updated: December 11, 2025
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

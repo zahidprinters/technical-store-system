@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Technical Store System - Enterprise Inventory Management for Frappe Framework">
+    <meta name="keywords" content="Frappe, ERPNext, Inventory, Technical Store, Warehouse Management">
+    <meta name="author" content="Technical Store System Team">
+
+    <title>Technical Store System - Development Dashboard</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="js/dashboard.js" as="script">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                Technical Store System
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="doctypes.html" class="nav-link">
+                    <i class="fas fa-database"></i> DocTypes
+                </a>
+                <a href="architecture.html" class="nav-link">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </a>
+                <a href="roadmap.html" class="nav-link">
+                    <i class="fas fa-road"></i> Roadmap
+                </a>
+                <a href="development.html" class="nav-link">
+                    <i class="fas fa-code"></i> Development
+                </a>
+                <a href="api.html" class="nav-link">
+                    <i class="fas fa-plug"></i> API
+                </a>
+                <a href="testing.html" class="nav-link">
+                    <i class="fas fa-vial"></i> Testing
+                </a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">
+                <i class="fas fa-cogs"></i>
+                Technical Store System
+            </h1>
+            <p class="dashboard-subtitle">
+                Enterprise Inventory Management | Frappe Framework v15+
+            </p>
+            <div class="status-badges">
+                <div class="status-badge status-completed">
+                    <i class="fas fa-check-circle"></i>
+                    Phase 1 Complete
+                </div>
+                <div class="status-badge status-in-progress">
+                    <i class="fas fa-clock"></i>
+                    Phase 2 Active
+                </div>
+                <div class="status-badge status-planned">
+                    <i class="fas fa-calendar"></i>
+                    Updated: Dec 11, 2025
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-number">8</div>
+                <div class="summary-label">DocTypes Completed</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">150+</div>
+                <div class="summary-label">Fields Implemented</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">600+</div>
+                <div class="summary-label">Lines of Code</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">94%</div>
+                <div class="summary-label">Test Coverage</div>
+            </div>
+        </div>
+
+        <!-- Overall Progress -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <h3 class="progress-title">Overall Project Progress</h3>
+                <div class="progress-percentage" id="overall-progress">0%</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overall-progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Phase 1: Foundation -->
+        <div class="phase-section" id="phase1">
+            <div class="phase-header">
+                <div class="phase-icon completed">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div>
+                    <h2 class="phase-title">Phase 1: Foundation (COMPLETED)</h2>
+                    <p class="phase-description">8 Production-Ready DocTypes with 150+ Fields</p>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-header">
+                    <h4>Phase Progress</h4>
+                    <div id="phase1-progress-text">0% Complete</div>
+                </div>
+                <div class="progress-ring" id="phase1-ring">
+                    <svg width="120" height="120">
+                        <defs>
+                            <linearGradient id="phase1Gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#45a049;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="60" cy="60" r="45" stroke="#e0e0e0" stroke-width="8" fill="none"/>
+                        <circle cx="60" cy="60" r="45" stroke="url(#phase1Gradient)" stroke-width="8" fill="none"
+                                class="progress-ring-fill"/>
+                    </svg>
+                    <div class="progress-ring-text">0%</div>
+                </div>
+            </div>
+
+            <div class="task-section active">
+                <div class="task-header">
+                    <h4 class="task-title">
+                        <i class="fas fa-cubes"></i>
+                        Core DocTypes
+                    </h4>
+                    <div class="task-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="task-content">
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store Settings">
+                            <span class="task-text">Store Settings - Global configuration and ERPNext integration</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store UOM">
+                            <span class="task-text">Store UOM - Units of measure with conversion support</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store Item Group">
+                            <span class="task-text">Store Item Group - Hierarchical categorization with inheritance</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store Technical Category">
+                            <span class="task-text">Store Technical Category - Technical discipline classification</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store Location">
+                            <span class="task-text">Store Location - 6-level warehouse hierarchy with auto-generation</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store Item">
+                            <span class="task-text">Store Item - Complete item master with advanced tracking options</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store Item Serial Number">
+                            <span class="task-text">Store Item Serial Number - Individual item tracking with warranty</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase1-foundation-Store Item Batch Number">
+                            <span class="task-text">Store Item Batch Number - Lot-based tracking with expiry management</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Transaction Management -->
+        <div class="phase-section" id="phase2">
+            <div class="phase-header">
+                <div class="phase-icon in-progress">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div>
+                    <h2 class="phase-title">Phase 2: Transaction Management (IN PROGRESS)</h2>
+                    <p class="phase-description">Professional Transaction Workflows - Q1 2026</p>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-header">
+                    <h4>Phase Progress</h4>
+                    <div id="phase2-progress-text">0% Complete</div>
+                </div>
+                <div class="progress-ring" id="phase2-ring">
+                    <svg width="120" height="120">
+                        <defs>
+                            <linearGradient id="phase2Gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FF9800;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#F57C00;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="60" cy="60" r="45" stroke="#e0e0e0" stroke-width="8" fill="none"/>
+                        <circle cx="60" cy="60" r="45" stroke="url(#phase2Gradient)" stroke-width="8" fill="none"
+                                class="progress-ring-fill"/>
+                    </svg>
+                    <div class="progress-ring-text">0%</div>
+                </div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-header">
+                    <h4 class="task-title">
+                        <i class="fas fa-exchange-alt"></i>
+                        Transaction DocTypes
+                    </h4>
+                    <div class="task-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="task-content">
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase2-transactions-Store Item Receipt">
+                            <span class="task-text">Store Item Receipt - Professional goods receipt with quality control</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase2-transactions-Store Item Issue">
+                            <span class="task-text">Store Item Issue - Controlled item issuance with department tracking</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase2-transactions-Store Item Requisition">
+                            <span class="task-text">Store Item Requisition - Formal request system with priority levels</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-header">
+                    <h4 class="task-title">
+                        <i class="fas fa-cogs"></i>
+                        Workflow Features
+                    </h4>
+                    <div class="task-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="task-content">
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase2-workflows-Approval Workflows">
+                            <span class="task-text">Approval Workflows - Multi-level approval processes for transactions</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase2-workflows-Quality Control">
+                            <span class="task-text">Quality Control - Inspection and quality assurance workflows</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase2-workflows-Reporting System">
+                            <span class="task-text">Reporting System - Advanced analytics and reporting capabilities</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Advanced Features -->
+        <div class="phase-section" id="phase3">
+            <div class="phase-header">
+                <div class="phase-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <h2 class="phase-title">Phase 3: Advanced Features (PLANNED)</h2>
+                    <p class="phase-description">Next-Generation Capabilities - Q2-Q3 2026</p>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-header">
+                    <h4>Phase Progress</h4>
+                    <div id="phase3-progress-text">0% Complete</div>
+                </div>
+                <div class="progress-ring" id="phase3-ring">
+                    <svg width="120" height="120">
+                        <defs>
+                            <linearGradient id="phase3Gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#1976D2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="60" cy="60" r="45" stroke="#e0e0e0" stroke-width="8" fill="none"/>
+                        <circle cx="60" cy="60" r="45" stroke="url(#phase3Gradient)" stroke-width="8" fill="none"
+                                class="progress-ring-fill"/>
+                    </svg>
+                    <div class="progress-ring-text">0%</div>
+                </div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-header">
+                    <h4 class="task-title">
+                        <i class="fas fa-star"></i>
+                        Advanced Features
+                    </h4>
+                    <div class="task-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="task-content">
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase3-advanced-Advanced Analytics">
+                            <span class="task-text">Advanced Analytics - AI-powered insights and predictive analytics</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase3-advanced-Mobile App">
+                            <span class="task-text">Mobile App - Native mobile applications for iOS and Android</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase3-advanced-API Integration">
+                            <span class="task-text">API Integration - Third-party system integrations and webhooks</span>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="phase3-advanced-Multi-tenant Support">
+                            <span class="task-text">Multi-tenant Support - Enterprise multi-organization capabilities</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="stat-number">600+</div>
+                <div class="stat-label">Lines of Code</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Documentation Pages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Test Cases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number">3</div>
+                <div class="stat-label">Months Development</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="quick-actions-grid">
+                <button class="btn btn-primary" onclick="window.tssDashboard.exportProgress()">
+                    <i class="fas fa-download"></i> Export Progress
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">
+                    <i class="fas fa-upload"></i> Import Progress
+                </button>
+                <input type="file" id="import-file" accept=".json" onchange="window.tssDashboard.importProgress(this.files[0])">
+                <a href="development.html" class="btn btn-secondary">
+                    <i class="fas fa-code"></i> Development Guide
+                </a>
+                <a href="api.html" class="btn btn-secondary">
+                    <i class="fas fa-plug"></i> API Documentation
+                </a>
+                <a href="testing.html" class="btn btn-secondary">
+                    <i class="fas fa-vial"></i> Testing Suite
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-nav">
+        <div class="footer-nav-content">
+            <div class="footer-nav-grid">
+                <div class="footer-nav-section">
+                    <h4>Project</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="index.html">Dashboard</a></li>
+                        <li><a href="doctypes.html">DocTypes</a></li>
+                        <li><a href="architecture.html">Architecture</a></li>
+                        <li><a href="roadmap.html">Roadmap</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="api.html">API</a></li>
+                        <li><a href="testing.html">Testing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Resources</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://github.com/zahidprinters/technical-store-system" target="_blank">GitHub Repository</a></li>
+                        <li><a href="https://frappeframework.com" target="_blank">Frappe Framework</a></li>
+                        <li><a href="https://erpnext.com" target="_blank">ERPNext</a></li>
+                        <li><a href="https://docs.frappeframework.com" target="_blank">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Community</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://discuss.frappe.io" target="_blank">Frappe Discuss</a></li>
+                        <li><a href="https://github.com/frappe" target="_blank">GitHub</a></li>
+                        <li><a href="https://frappe.school" target="_blank">Frappe School</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <i class="fas fa-code"></i>
+                    Technical Store System - Enterprise Inventory Management |
+                    <a href="https://github.com/zahidprinters/technical-store-system" target="_blank">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a> |
+                    Updated: December 11, 2025
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

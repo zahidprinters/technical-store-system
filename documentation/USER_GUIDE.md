@@ -1,13 +1,35 @@
 # Technical Store System - User Guide
-====================================
 
-**Version:** 1.0.0
-**Last Updated:** December 11, 2025
-**System:** Technical Store System for Frappe/ERPNext
+**Enterprise Inventory Management for Technical/Maintenance Stores**
+
+[![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)](../README.md)
+[![Status](https://img.shields.io/badge/status-Phase%201%20Complete-green.svg)](../README.md)
+[![Phase 2](https://img.shields.io/badge/Phase%202-In%20Development-orange.svg)](../dev_dashboard/temp_memory_receipt.md)
+
+---
+
+## 📊 **Current System Status**
+
+### **✅ PHASE 1: Foundation Complete (December 2025)**
+**Master Data & Configuration Fully Operational**
+
+- **Store Settings** - Global configuration and ERPNext integration
+- **Store Locations** - 6-level hierarchical warehouse structure
+- **Store Items** - Complete item master with advanced tracking
+- **Store Item Groups** - Hierarchical categorization system
+- **Store UOM** - Multi-unit support with conversions
+- **Demo Data** - One-click sample data installation
+
+### **🚧 PHASE 2: Transaction Management (In Development - Q1 2026)**
+**Professional Transaction Workflows Coming Soon**
+
+- **Store Item Receipt** - Goods receipt with quality control (🔄 Active Development)
+- **Store Item Issue** - Controlled issuance with approvals (📋 Planned)
+- **Store Item Requisition** - Formal request system (📋 Planned)
+
+**Note:** Transaction features are currently under development. For now, focus on setting up your master data and location hierarchy.
 
 ## 📋 Table of Contents
-
-### [1. Quick Start Guide](#1-quick-start-guide)
 - [System Setup in 5 Minutes](#system-setup-in-5-minutes)
 - [First Item Creation](#first-item-creation)
 - [Basic Transactions](#basic-transactions)

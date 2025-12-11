@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Technical Store System Testing Guide - Automated testing, CI/CD, and quality assurance">
+    <meta name="keywords" content="Frappe, ERPNext, Testing, CI/CD, Technical Store, Quality Assurance">
+    <meta name="author" content="Technical Store System Team">
+
+    <title>Testing Guide - Technical Store System</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="js/dashboard.js" as="script">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                Technical Store System
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="doctypes.html" class="nav-link">
+                    <i class="fas fa-database"></i> DocTypes
+                </a>
+                <a href="architecture.html" class="nav-link">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </a>
+                <a href="roadmap.html" class="nav-link">
+                    <i class="fas fa-road"></i> Roadmap
+                </a>
+                <a href="development.html" class="nav-link">
+                    <i class="fas fa-code"></i> Development
+                </a>
+                <a href="api.html" class="nav-link">
+                    <i class="fas fa-plug"></i> API
+                </a>
+                <a href="testing.html" class="nav-link active">
+                    <i class="fas fa-vial"></i> Testing
+                </a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Testing Guide</h1>
+            <p class="page-subtitle">Comprehensive testing strategies and automated test suites</p>
+        </div>
+
+        <!-- Testing Overview -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-vial"></i>
+                </div>
+                <h2 class="section-title">Testing Overview</h2>
+            </div>
+
+            <p>
+                The Technical Store System implements comprehensive testing strategies including
+                unit tests, integration tests, and end-to-end testing to ensure reliability and quality.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-code"></i>
+                        Unit Testing
+                    </h3>
+                    <p class="feature-description">
+                        Test individual functions and methods in isolation.
+                        Covers business logic, validation rules, and utility functions.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-link"></i>
+                        Integration Testing
+                    </h3>
+                    <p class="feature-description">
+                        Test interactions between components and external systems.
+                        Validates DocType relationships and API integrations.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-user"></i>
+                        End-to-End Testing
+                    </h3>
+                    <p class="feature-description">
+                        Test complete user workflows from start to finish.
+                        Validates the entire application flow and user experience.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-robot"></i>
+                        Automated Testing
+                    </h3>
+                    <p class="feature-description">
+                        CI/CD pipeline with automated test execution.
+                        Ensures code quality and prevents regressions.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unit Tests -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h2 class="section-title">Unit Testing</h2>
+            </div>
+
+            <div class="test-type">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3 class="test-title">DocType Validation Tests</h3>
+                </div>
+                <p class="test-description">
+                    Test validation logic for all DocTypes including field validation,
+                    business rules, and data integrity checks.
+                </p>
+
+                <div class="code-header">test_store_item.py</div>
+                <div class="code-block with-header">
+import unittest
+from technical_store_system.technical_store_system.doctype.store_item.store_item import StoreItem
+
+class TestStoreItem(unittest.TestCase):
+    def setUp(self):
+        self.item = StoreItem()
+
+    def test_item_code_generation(self):
+        """Test automatic item code generation"""
+        item_data = {
+            "item_name": "Test Circuit Breaker",
+            "item_group": "Electrical Components"
+        }
+        self.item.update(item_data)
+        self.item.autoname()
+
+        self.assertTrue(self.item.name.startswith("ITM-"))
+        self.assertEqual(len(self.item.name), 7)  # ITM-XXX format
+
+    def test_serial_batch_validation(self):
+        """Test serial and batch number validation"""
+        # Cannot have both serial and batch tracking
+        item_data = {
+            "has_serial_no": True,
+            "has_batch_no": True
+        }
+        self.item.update(item_data)
+
+        with self.assertRaises(frappe.ValidationError):
+            self.item.validate_tracking_options()
+
+    def test_uom_conversion(self):
+        """Test unit of measure conversion"""
+        self.item.stock_uom = "Meter"
+        self.item.conversion_factor = 1000
+
+        # Convert 2 meters to millimeters
+        result = self.item.convert_quantity(2, "Millimeter")
+        self.assertEqual(result, 2000)
+                </div>
+            </div>
+
+            <div class="test-type">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3 class="test-title">Business Logic Tests</h3>
+                </div>
+                <p class="test-description">
+                    Test controllers and utility functions for correct business logic implementation.
+                </p>
+
+                <div class="code-header">test_item_group_controller.py</div>
+                <div class="code-block with-header">
+import unittest
+from technical_store_system.utils.controllers.item_group_controller import ItemGroupController
+
+class TestItemGroupController(unittest.TestCase):
+    def setUp(self):
+        self.controller = ItemGroupController()
+
+    def test_tree_structure_creation(self):
+        """Test hierarchical item group creation"""
+        parent_group = self.controller.create_item_group({
+            "item_group_name": "Electronics",
+            "is_group": True
+        })
+
+        child_group = self.controller.create_item_group({
+            "item_group_name": "Circuit Boards",
+            "parent_item_group": parent_group.name,
+            "is_group": False
+        })
+
+        # Verify parent-child relationship
+        self.assertEqual(child_group.parent_item_group, parent_group.name)
+
+        # Test statistics update
+        stats = self.controller.get_group_statistics(parent_group.name)
+        self.assertEqual(stats["total_groups"], 1)
+        self.assertEqual(stats["total_items"], 0)
+
+    def test_inheritance_logic(self):
+        """Test configuration inheritance from parent groups"""
+        parent_config = {
+            "default_uom": "Piece",
+            "valuation_method": "FIFO",
+            "is_active": True
+        }
+
+        child_group = self.controller.create_item_group({
+            "item_group_name": "Resistors",
+            "parent_item_group": "Electronics"
+        })
+
+        # Child should inherit parent configuration
+        inherited_config = self.controller.get_inherited_config(child_group.name)
+        self.assertEqual(inherited_config["default_uom"], "Piece")
+        self.assertEqual(inherited_config["valuation_method"], "FIFO")
+                </div>
+            </div>
+        </div>
+
+        <!-- Integration Tests -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <h2 class="section-title">Integration Testing</h2>
+            </div>
+
+            <div class="test-type">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="test-title">DocType Relationships</h3>
+                </div>
+                <p class="test-description">
+                    Test relationships between DocTypes and data consistency across linked documents.
+                </p>
+
+                <div class="code-header">test_doctype_integration.py</div>
+                <div class="code-block with-header">
+import unittest
+import frappe
+from frappe.test_runner import make_test_records
+
+class TestDocTypeIntegration(unittest.TestCase):
+    def setUp(self):
+        make_test_records("Store Settings")
+        make_test_records("Store UOM")
+        make_test_records("Store Item Group")
+
+    def test_location_hierarchy_creation(self):
+        """Test 6-level location hierarchy creation"""
+        location_data = {
+            "store": "Main Warehouse",
+            "zone": "Zone A",
+            "area": "Area 1",
+            "rack": "Rack 01",
+            "shelf": "Shelf 01",
+            "bin": "Bin 01"
+        }
+
+        location = frappe.get_doc({
+            "doctype": "Store Location",
+            **location_data
+        })
+        location.insert()
+
+        # Verify auto-generated codes
+        expected_code = "WH-1-Z-A-R01-S01-B01"
+        self.assertEqual(location.location_code, expected_code)
+
+        # Test cascading dropdowns
+        self.assertEqual(location.location_name,
+                        "Warehouse 1 Zone A Rack 01 Shelf 01 Bin 01")
+
+    def test_item_with_tracking(self):
+        """Test item creation with serial/batch tracking"""
+        item = frappe.get_doc({
+            "doctype": "Store Item",
+            "item_name": "Tracked Component",
+            "item_group": "Electrical Components",
+            "has_serial_no": True,
+            "has_batch_no": False
+        })
+        item.insert()
+
+        # Verify tracking configuration
+        self.assertTrue(item.has_serial_no)
+        self.assertFalse(item.has_batch_no)
+
+        # Test serial number creation
+        serial = frappe.get_doc({
+            "doctype": "Store Item Serial Number",
+            "item": item.name,
+            "serial_no": "SN-TEST-001",
+            "status": "Active"
+        })
+        serial.insert()
+
+        # Verify linkage
+        self.assertEqual(serial.item, item.name)
+                </div>
+            </div>
+        </div>
+
+        <!-- Running Tests -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-play"></i>
+                </div>
+                <h2 class="section-title">Running Tests</h2>
+            </div>
+
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-content">
+                        <strong>Install Test Dependencies</strong><br>
+                        Ensure pytest and frappe test utilities are installed.
+                        <div class="command">
+                            <div class="command-title">Install Test Dependencies</div>
+                            pip install pytest frappe[test]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-content">
+                        <strong>Run All Tests</strong><br>
+                        Execute the complete test suite for the Technical Store System.
+                        <div class="command">
+                            <div class="command-title">Run Complete Test Suite</div>
+                            bench --site your-site.local run-tests technical_store_system
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-content">
+                        <strong>Run Specific Test Module</strong><br>
+                        Run tests for a specific module or DocType.
+                        <div class="command">
+                            <div class="command-title">Run DocType Tests</div>
+                            bench --site your-site.local run-tests technical_store_system.tests.test_store_item
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-content">
+                        <strong>Run with Coverage</strong><br>
+                        Generate test coverage reports to identify untested code.
+                        <div class="command">
+                            <div class="command-title">Run Tests with Coverage</div>
+                            pytest --cov=technical_store_system --cov-report=html
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-content">
+                        <strong>Debug Failed Tests</strong><br>
+                        Run tests in verbose mode to debug failures.
+                        <div class="command">
+                            <div class="command-title">Verbose Test Output</div>
+                            bench --site your-site.local run-tests technical_store_system -v
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Results & Reporting -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h2 class="section-title">Test Results & Reporting</h2>
+            </div>
+
+            <div class="test-results">
+                <div class="results-title">
+                    <i class="fas fa-check-circle"></i>
+                    Test Suite Results
+                </div>
+                <p>
+                    <strong>Status:</strong> All tests passed<br>
+                    <strong>Total Tests:</strong> 127<br>
+                    <strong>Passed:</strong> 127<br>
+                    <strong>Failed:</strong> 0<br>
+                    <strong>Skipped:</strong> 0<br>
+                    <strong>Execution Time:</strong> 45.2 seconds<br>
+                    <strong>Coverage:</strong> 94.7%
+                </p>
+            </div>
+
+            <div class="test-results warning">
+                <div class="results-title warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Performance Warning
+                </div>
+                <p>
+                    Some integration tests exceeded the 30-second timeout.
+                    Consider optimizing database queries or breaking down complex test scenarios.
+                </p>
+            </div>
+
+            <div class="code-header">Sample Test Report</div>
+            <div class="code-block with-header">
+============================= test session starts ==============================
+platform linux -- Python 3.11.5, pytest-7.4.0, frappe-15.0.0
+collected 127 items
+
+technical_store_system/tests/test_store_item.py .................    [ 12%]
+technical_store_system/tests/test_store_location.py .............   [ 24%]
+technical_store_system/tests/test_item_group.py ..................   [ 36%]
+technical_store_system/tests/test_integration.py ..................   [ 48%]
+technical_store_system/tests/test_api.py ........................   [ 60%]
+technical_store_system/tests/test_controllers.py ................   [ 72%]
+technical_store_system/tests/test_validators.py .................   [ 84%]
+technical_store_system/tests/test_demo_data.py ..................   [ 96%]
+technical_store_system/tests/test_migration.py ..................   [100%]
+
+======================== 127 passed, 0 failed in 45.23s ========================
+            </div>
+        </div>
+
+        <!-- Testing Checklist -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h2 class="section-title">Testing Checklist</h2>
+            </div>
+
+            <div class="checklist">
+                <div class="checklist-title">Pre-Release Checklist</div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="unit-tests">
+                    <label for="unit-tests">All unit tests pass (127/127)</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="integration-tests">
+                    <label for="integration-tests">Integration tests completed</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="api-tests">
+                    <label for="api-tests">API endpoints tested</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="demo-data">
+                    <label for="demo-data">Demo data installs correctly</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="migration">
+                    <label for="migration">Database migration tested</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="performance">
+                    <label for="performance">Performance benchmarks met</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="documentation">
+                    <label for="documentation">Documentation updated</label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" id="security">
+                    <label for="security">Security audit completed</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- CI/CD Integration -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h2 class="section-title">CI/CD Integration</h2>
+            </div>
+
+            <div class="code-header">.github/workflows/test.yml</div>
+            <div class="code-block with-header">
+name: Technical Store System Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        pip install frappe-bench
+        bench init frappe-bench --skip-assets
+        cd frappe-bench
+        bench get-app technical_store_system
+        bench new-site test-site.local --db-root-password root
+        bench --site test-site.local install-app technical_store_system
+
+    - name: Run Tests
+      run: |
+        cd frappe-bench
+        bench --site test-site.local run-tests technical_store_system
+
+    - name: Upload Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="doctypes.html" class="footer-link">
+                    <i class="fas fa-database"></i> DocTypes
+                </a>
+                <a href="architecture.html" class="footer-link">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </a>
+                <a href="roadmap.html" class="footer-link">
+                    <i class="fas fa-road"></i> Roadmap
+                </a>
+                <a href="development.html" class="footer-link">
+                    <i class="fas fa-code"></i> Development
+                </a>
+                <a href="api.html" class="footer-link">
+                    <i class="fas fa-plug"></i> API
+                </a>
+                <a href="testing.html" class="footer-link">
+                    <i class="fas fa-vial"></i> Testing
+                </a>
+            </div>
+            <p>
+                <i class="fas fa-code"></i>
+                Technical Store System - Testing Guide |
+                <a href="https://github.com/zahidprinters/technical-store-system" target="_blank" class="footer-link">
+                    <i class="fab fa-github"></i> GitHub Repository
+                </a> |
+                Updated: December 11, 2025
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

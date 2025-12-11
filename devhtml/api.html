@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Technical Store System API Documentation - REST API endpoints, authentication, and integration guide">
+    <meta name="keywords" content="Frappe, ERPNext, API, REST, Technical Store, Integration">
+    <meta name="author" content="Technical Store System Team">
+
+    <title>API Documentation - Technical Store System</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="js/dashboard.js" as="script">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                Technical Store System
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="doctypes.html" class="nav-link">
+                    <i class="fas fa-database"></i> DocTypes
+                </a>
+                <a href="architecture.html" class="nav-link">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </a>
+                <a href="roadmap.html" class="nav-link">
+                    <i class="fas fa-road"></i> Roadmap
+                </a>
+                <a href="development.html" class="nav-link">
+                    <i class="fas fa-code"></i> Development
+                </a>
+                <a href="api.html" class="nav-link active">
+                    <i class="fas fa-plug"></i> API
+                </a>
+                <a href="testing.html" class="nav-link">
+                    <i class="fas fa-vial"></i> Testing
+                </a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+                    <i class="fas fa-plug"></i> API
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">API Documentation</h1>
+            <p class="page-subtitle">RESTful API endpoints for Technical Store System integration</p>
+        </div>
+
+        <!-- Authentication -->
+        <div class="api-section">
+            <div class="api-header">
+                <div class="api-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h2 class="api-title">Authentication</h2>
+            </div>
+
+            <div class="auth-notice">
+                <div class="auth-title">
+                    <i class="fas fa-info-circle"></i>
+                    API Key Authentication
+                </div>
+                <p>
+                    All API requests require authentication using API Key and API Secret.
+                    Include these in your request headers or as query parameters.
+                </p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <div class="endpoint-url">/api/method/login</div>
+                <p class="endpoint-description">
+                    Authenticate and get session token for API access.
+                </p>
+
+                <div class="parameters">
+                    <h4>Parameters</h4>
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="param-name">usr</td>
+                                <td class="param-type">string</td>
+                                <td class="param-required">Yes</td>
+                                <td>Username or email</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">pwd</td>
+                                <td class="param-type">string</td>
+                                <td class="param-required">Yes</td>
+                                <td>Password</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="response-example">
+                    <div class="response-title">Response Example</div>
+                    <div class="code-block">
+{
+    "message": "Logged In",
+    "full_name": "Administrator",
+    "user": "administrator"
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store Items API -->
+        <div class="api-section">
+            <div class="api-header">
+                <div class="api-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <h2 class="api-title">Store Items</h2>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-get">GET</span>
+                <div class="endpoint-url">/api/resource/Store Item</div>
+                <p class="endpoint-description">
+                    Retrieve list of store items with optional filtering.
+                </p>
+
+                <div class="parameters">
+                    <h4>Query Parameters</h4>
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="param-name">fields</td>
+                                <td class="param-type">string</td>
+                                <td>No</td>
+                                <td>Comma-separated field names to return</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">filters</td>
+                                <td class="param-type">object</td>
+                                <td>No</td>
+                                <td>Filter criteria as JSON object</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">limit</td>
+                                <td class="param-type">integer</td>
+                                <td>No</td>
+                                <td>Maximum number of records (default: 20)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('items-list')">List Items</button>
+                    <button class="tab" onclick="showTab('items-filter')">Filter Example</button>
+                </div>
+
+                <div id="items-list" class="tab-content active">
+                    <div class="code-header">Get All Items</div>
+                    <div class="code-block with-header">
+GET /api/resource/Store Item?fields=["name","item_code","item_name","item_group"]
+                    </div>
+                </div>
+
+                <div id="items-filter" class="tab-content">
+                    <div class="code-header">Filter by Item Group</div>
+                    <div class="code-block with-header">
+GET /api/resource/Store Item?filters=[["item_group","=","Electrical"]]
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <div class="endpoint-url">/api/resource/Store Item</div>
+                <p class="endpoint-description">
+                    Create a new store item.
+                </p>
+
+                <div class="parameters">
+                    <h4>Request Body</h4>
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="param-name">item_code</td>
+                                <td class="param-type">string</td>
+                                <td class="param-required">Yes</td>
+                                <td>Unique item code</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">item_name</td>
+                                <td class="param-type">string</td>
+                                <td class="param-required">Yes</td>
+                                <td>Item display name</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">item_group</td>
+                                <td class="param-type">string</td>
+                                <td class="param-required">Yes</td>
+                                <td>Item group reference</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">has_serial_no</td>
+                                <td class="param-type">boolean</td>
+                                <td>No</td>
+                                <td>Enable serial number tracking</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">has_batch_no</td>
+                                <td class="param-type">boolean</td>
+                                <td>No</td>
+                                <td>Enable batch number tracking</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="response-example">
+                    <div class="response-title">Request Example</div>
+                    <div class="code-block">
+{
+    "item_code": "ITM-001",
+    "item_name": "Circuit Breaker 10A",
+    "item_group": "Electrical Components",
+    "has_serial_no": true,
+    "has_batch_no": false,
+    "description": "10 Amp Miniature Circuit Breaker"
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store Locations API -->
+        <div class="api-section">
+            <div class="api-header">
+                <div class="api-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h2 class="api-title">Store Locations</h2>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-get">GET</span>
+                <div class="endpoint-url">/api/resource/Store Location</div>
+                <p class="endpoint-description">
+                    Retrieve warehouse location hierarchy.
+                </p>
+
+                <div class="response-example">
+                    <div class="response-title">Response Example</div>
+                    <div class="code-block">
+{
+    "data": [
+        {
+            "name": "LOC-001",
+            "location_code": "WH-1-Z-A-R01-S01-B01",
+            "location_name": "Warehouse 1 Zone A Rack 01 Shelf 01 Bin 01",
+            "store": "Main Warehouse",
+            "zone": "Zone A",
+            "area": "Area 1",
+            "rack": "Rack 01",
+            "shelf": "Shelf 01",
+            "bin": "Bin 01"
+        }
+    ]
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <div class="endpoint-url">/api/resource/Store Location</div>
+                <p class="endpoint-description">
+                    Create a new storage location with auto-generated codes.
+                </p>
+
+                <div class="response-example">
+                    <div class="response-title">Request Example</div>
+                    <div class="code-block">
+{
+    "store": "Main Warehouse",
+    "zone": "Zone B",
+    "area": "Area 2",
+    "rack": "Rack 05",
+    "shelf": "Shelf 03",
+    "bin": "Bin 15"
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom API Methods -->
+        <div class="api-section">
+            <div class="api-header">
+                <div class="api-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h2 class="api-title">Custom API Methods</h2>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-get">GET</span>
+                <div class="endpoint-url">/api/method/technical_store_system.api.get_inventory_report</div>
+                <p class="endpoint-description">
+                    Generate comprehensive inventory report with stock levels and valuations.
+                </p>
+
+                <div class="parameters">
+                    <h4>Query Parameters</h4>
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="param-name">item_group</td>
+                                <td class="param-type">string</td>
+                                <td>No</td>
+                                <td>Filter by item group</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">location</td>
+                                <td class="param-type">string</td>
+                                <td>No</td>
+                                <td>Filter by location</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">as_of_date</td>
+                                <td class="param-type">date</td>
+                                <td>No</td>
+                                <td>Report date (default: today)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <div class="endpoint-url">/api/method/technical_store_system.api.bulk_update_stock</div>
+                <p class="endpoint-description">
+                    Bulk update stock quantities for multiple items.
+                </p>
+
+                <div class="response-example">
+                    <div class="response-title">Request Example</div>
+                    <div class="code-block">
+{
+    "updates": [
+        {
+            "item_code": "ITM-001",
+            "location": "WH-1-Z-A-R01-S01-B01",
+            "quantity": 50,
+            "batch_no": "BATCH-2025-001"
+        },
+        {
+            "item_code": "ITM-002",
+            "location": "WH-1-Z-A-R01-S01-B02",
+            "quantity": 25,
+            "serial_no": "SN-2025-0001"
+        }
+    ]
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Features -->
+        <div class="api-section">
+            <div class="api-header">
+                <div class="api-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h2 class="api-title">API Features</h2>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Secure Authentication
+                    </h3>
+                    <p class="feature-description">
+                        API Key/Secret authentication with role-based access control.
+                        All endpoints protected with proper authorization checks.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-filter"></i>
+                        Advanced Filtering
+                    </h3>
+                    <p class="feature-description">
+                        Complex query filters with support for multiple conditions,
+                        date ranges, and custom field filtering.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Bulk Operations
+                    </h3>
+                    <p class="feature-description">
+                        Efficient bulk operations for data import/export,
+                        mass updates, and batch processing.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-clock"></i>
+                        Rate Limiting
+                    </h3>
+                    <p class="feature-description">
+                        Built-in rate limiting to prevent abuse and ensure
+                        fair usage across all API consumers.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-file-code"></i>
+                        RESTful Design
+                    </h3>
+                    <p class="feature-description">
+                        Standard RESTful API design with proper HTTP methods,
+                        status codes, and JSON responses.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">
+                        <i class="fas fa-book"></i>
+                        Comprehensive Docs
+                    </h3>
+                    <p class="feature-description">
+                        Complete API documentation with examples, parameter
+                        descriptions, and response schemas.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Handling -->
+        <div class="api-section">
+            <div class="api-header">
+                <div class="api-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h2 class="api-title">Error Handling</h2>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-description">
+                    All API errors follow a consistent format with appropriate HTTP status codes.
+                </div>
+
+                <div class="response-example">
+                    <div class="response-title">Error Response Format</div>
+                    <div class="code-block">
+{
+    "exc_type": "ValidationError",
+    "exception": "frappe.exceptions.ValidationError",
+    "exc": [
+        "Item code already exists"
+    ],
+    "_server_messages": "[\"Item code already exists\"]"
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+# Common HTTP Status Codes
+200 OK - Success
+201 Created - Resource created successfully
+400 Bad Request - Invalid request data
+401 Unauthorized - Authentication required
+403 Forbidden - Insufficient permissions
+404 Not Found - Resource not found
+500 Internal Server Error - Server error
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-nav">
+        <div class="footer-nav-content">
+            <div class="footer-nav-grid">
+                <div class="footer-nav-section">
+                    <h4>Project</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="index.html">Dashboard</a></li>
+                        <li><a href="doctypes.html">DocTypes</a></li>
+                        <li><a href="architecture.html">Architecture</a></li>
+                        <li><a href="roadmap.html">Roadmap</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="api.html">API</a></li>
+                        <li><a href="testing.html">Testing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Resources</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://github.com/zahidprinters/technical-store-system" target="_blank">GitHub Repository</a></li>
+                        <li><a href="https://frappeframework.com" target="_blank">Frappe Framework</a></li>
+                        <li><a href="https://erpnext.com" target="_blank">ERPNext</a></li>
+                        <li><a href="https://docs.frappeframework.com" target="_blank">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Community</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://discuss.frappe.io" target="_blank">Frappe Discuss</a></li>
+                        <li><a href="https://github.com/frappe" target="_blank">GitHub</a></li>
+                        <li><a href="https://frappe.school" target="_blank">Frappe School</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <i class="fas fa-code"></i>
+                    Technical Store System - API Documentation |
+                    <a href="https://github.com/zahidprinters/technical-store-system" target="_blank">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a> |
+                    Updated: December 11, 2025
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

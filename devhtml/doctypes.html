@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Technical Store System DocTypes Reference - Complete guide to all DocTypes, fields, and functionality">
+    <meta name="keywords" content="Frappe, ERPNext, DocTypes, Technical Store, Database Schema">
+    <meta name="author" content="Technical Store System Team">
+
+    <title>DocTypes Reference - Technical Store System</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="js/dashboard.js" as="script">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                Technical Store System
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="doctypes.html" class="nav-link active">
+                    <i class="fas fa-database"></i> DocTypes
+                </a>
+                <a href="architecture.html" class="nav-link">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </a>
+                <a href="roadmap.html" class="nav-link">
+                    <i class="fas fa-road"></i> Roadmap
+                </a>
+                <a href="development.html" class="nav-link">
+                    <i class="fas fa-code"></i> Development
+                </a>
+                <a href="api.html" class="nav-link">
+                    <i class="fas fa-plug"></i> API
+                </a>
+                <a href="testing.html" class="nav-link">
+                    <i class="fas fa-vial"></i> Testing
+                </a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">DocTypes Reference</h1>
+            <p class="page-subtitle">Complete guide to all DocTypes, fields, and functionality</p>
+        </div>
+
+        <!-- Phase 1: Foundation -->
+        <div class="phase-banner">
+            <h2 class="phase-title">Phase 1: Foundation (COMPLETED)</h2>
+            <p class="phase-description">8 Production-Ready DocTypes with 150+ Fields</p>
+        </div>
+
+        <div class="doctype-grid">
+            <!-- Store Settings -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon settings">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Settings</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 46 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> 7 tabs</span>
+                    <span class="meta-item"><i class="fas fa-globe"></i> Single DocType</span>
+                </div>
+                <p class="doctype-description">
+                    Global system configuration and settings management. Controls ERPNext integration,
+                    demo data installation, audit trail configuration, and system-wide preferences.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">erpnext_installed</span>
+                        <span class="field-type">Select</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">enable_audit_trail</span>
+                        <span class="field-type">Check</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">default_currency</span>
+                        <span class="field-type">Link</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">auto_backup_frequency</span>
+                        <span class="field-type">Select</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store UOM -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon uom">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store UOM</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 15 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> 3 tabs</span>
+                    <span class="meta-item"><i class="fas fa-list"></i> Master</span>
+                </div>
+                <p class="doctype-description">
+                    Centralized units of measure with conversion support. Includes 27+ predefined units
+                    with automatic conversion calculations and validation.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">uom_name</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">conversion_factor</span>
+                        <span class="field-type">Float</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">base_uom</span>
+                        <span class="field-type">Link</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">is_enabled</span>
+                        <span class="field-type">Check</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Item Group -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon group">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Item Group</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 25 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> 4 tabs</span>
+                    <span class="meta-item"><i class="fas fa-tree"></i> Tree Structure</span>
+                </div>
+                <p class="doctype-description">
+                    Hierarchical categorization with inheritance. Unlimited nesting levels with
+                    real-time statistics and configuration inheritance from parent groups.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">item_group_name</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">parent_item_group</span>
+                        <span class="field-type">Link</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">is_group</span>
+                        <span class="field-type">Check</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">total_items</span>
+                        <span class="field-type">Int (Read-only)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Technical Category -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon category">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Technical Category</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 4 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> 1 tab</span>
+                    <span class="meta-item"><i class="fas fa-list"></i> Master</span>
+                </div>
+                <p class="doctype-description">
+                    Technical discipline classification for engineering items. Includes categories
+                    like Electrical, Mechanical, Electronic, Civil, etc.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">category_name</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">description</span>
+                        <span class="field-type">Text</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">is_active</span>
+                        <span class="field-type">Check</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Location -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon location">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Location</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 28 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> 2 tabs</span>
+                    <span class="meta-item"><i class="fas fa-building"></i> Document</span>
+                </div>
+                <p class="doctype-description">
+                    6-level warehouse hierarchy with auto-generation. Creates codes like
+                    WH-1-Z-A-R01-S01-B01 with cascading dropdowns and intelligent naming.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">store</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">zone</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">location_code</span>
+                        <span class="field-type">Data (Auto)</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">location_name</span>
+                        <span class="field-type">Data (Auto)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Item -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon item">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Item</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 64 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> 6 tabs</span>
+                    <span class="meta-item"><i class="fas fa-list"></i> Master</span>
+                </div>
+                <p class="doctype-description">
+                    Complete item master with advanced tracking options. Supports multi-UOM,
+                    serial/batch tracking, expiry management, and hierarchical categorization.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">item_code</span>
+                        <span class="field-type">Data (Auto)</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">item_name</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">has_serial_no</span>
+                        <span class="field-type">Check</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">has_batch_no</span>
+                        <span class="field-type">Check</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Item Serial Number -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon serial">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Item Serial Number</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 5 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> Child Table</span>
+                </div>
+                <p class="doctype-description">
+                    Individual item tracking with warranty management. Linked to Store Item
+                    for detailed serial number control and lifecycle management.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">serial_no</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">status</span>
+                        <span class="field-type">Select</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">warranty_expiry</span>
+                        <span class="field-type">Date</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Item Batch Number -->
+            <div class="doctype-card completed">
+                <div class="doctype-header">
+                    <div class="doctype-icon batch">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Item Batch Number</h3>
+                        <span class="doctype-status status-completed">Completed</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 5 fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> Child Table</span>
+                </div>
+                <p class="doctype-description">
+                    Lot-based tracking with expiry management. Supports batch-level quality
+                    control and recall management capabilities.
+                </p>
+                <div class="field-list">
+                    <h4>Key Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">batch_no</span>
+                        <span class="field-type">Data</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">quantity</span>
+                        <span class="field-type">Float</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">expiry_date</span>
+                        <span class="field-type">Date</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Transaction Management -->
+        <div class="phase-banner">
+            <h2 class="phase-title">Phase 2: Transaction Management (IN PROGRESS)</h2>
+            <p class="phase-description">Professional Transaction Workflows - Q1 2026</p>
+        </div>
+
+        <div class="doctype-grid">
+            <!-- Store Item Receipt -->
+            <div class="doctype-card in-progress">
+                <div class="doctype-header">
+                    <div class="doctype-icon receipt">
+                        <i class="fas fa-truck-loading"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Item Receipt</h3>
+                        <span class="doctype-status status-in-progress">In Development</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 25+ fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> Multiple tabs</span>
+                    <span class="meta-item"><i class="fas fa-file-invoice"></i> Submittable</span>
+                </div>
+                <p class="doctype-description">
+                    Professional goods receipt with quality control and supplier integration.
+                    Multi-item support with batch/serial assignment and stock updates.
+                </p>
+                <div class="field-list">
+                    <h4>Planned Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">receipt_no</span>
+                        <span class="field-type">Data (Auto)</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">supplier</span>
+                        <span class="field-type">Link</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">quality_status</span>
+                        <span class="field-type">Select</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">items (table)</span>
+                        <span class="field-type">Table</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Item Issue -->
+            <div class="doctype-card planned">
+                <div class="doctype-header">
+                    <div class="doctype-icon issue">
+                        <i class="fas fa-dolly"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Item Issue</h3>
+                        <span class="doctype-status status-planned">Planned</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 20+ fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> Multiple tabs</span>
+                    <span class="meta-item"><i class="fas fa-file-invoice"></i> Submittable</span>
+                </div>
+                <p class="doctype-description">
+                    Controlled item issuance with department tracking and approvals.
+                    Stock validation, partial issuances, and return management.
+                </p>
+                <div class="field-list">
+                    <h4>Planned Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">issue_no</span>
+                        <span class="field-type">Data (Auto)</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">department</span>
+                        <span class="field-type">Link</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">approval_status</span>
+                        <span class="field-type">Select</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">items (table)</span>
+                        <span class="field-type">Table</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Item Requisition -->
+            <div class="doctype-card planned">
+                <div class="doctype-header">
+                    <div class="doctype-icon requisition">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <h3 class="doctype-title">Store Item Requisition</h3>
+                        <span class="doctype-status status-planned">Planned</span>
+                    </div>
+                </div>
+                <div class="doctype-meta">
+                    <span class="meta-item"><i class="fas fa-hashtag"></i> 18+ fields</span>
+                    <span class="meta-item"><i class="fas fa-layer-group"></i> Multiple tabs</span>
+                    <span class="meta-item"><i class="fas fa-file-invoice"></i> Submittable</span>
+                </div>
+                <p class="doctype-description">
+                    Formal request system with priority levels and approvals.
+                    Department-based requests with automatic issue creation.
+                </p>
+                <div class="field-list">
+                    <h4>Planned Fields</h4>
+                    <div class="field-item">
+                        <span class="field-name">requisition_no</span>
+                        <span class="field-type">Data (Auto)</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">priority</span>
+                        <span class="field-type">Select</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">requested_by</span>
+                        <span class="field-type">Link</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-name">items (table)</span>
+                        <span class="field-type">Table</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features Section -->
+        <h2 class="section-title">Advanced Features & Capabilities</h2>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3 class="feature-title">
+                    <i class="fas fa-magic"></i>
+                    Auto-Discovery Pattern
+                </h3>
+                <p class="feature-description">
+                    Revolutionary installer that automatically discovers and installs DocTypes.
+                    No manual updates needed - just add files to setup/doctypes/ and run migrate.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">
+                    <i class="fas fa-code-branch"></i>
+                    6-Level Location Hierarchy
+                </h3>
+                <p class="feature-description">
+                    Intelligent warehouse structure: Store → Zone → Area → Rack → Shelf → Bin.
+                    Auto-generates codes like WH-1-Z-A-R01-S01-B01 with cascading dropdowns.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">
+                    <i class="fas fa-tree"></i>
+                    Tree Structure Support
+                </h3>
+                <p class="feature-description">
+                    Unlimited nesting for item groups with inheritance. Real-time statistics
+                    and configuration inheritance from parent to child groups.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">
+                    <i class="fas fa-hashtag"></i>
+                    Advanced Tracking
+                </h3>
+                <p class="feature-description">
+                    Flexible serial and batch number tracking. Individual item control,
+                    warranty management, expiry dates, and quality control.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">
+                    <i class="fas fa-balance-scale"></i>
+                    Multi-UOM Support
+                </h3>
+                <p class="feature-description">
+                    27+ predefined units with automatic conversions. Primary and alternative
+                    UOMs with validation and intelligent calculations.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Enterprise Security
+                </h3>
+                <p class="feature-description">
+                    Comprehensive role-based access control, audit trails, and data protection.
+                    Field-level permissions and secure API endpoints.
+                </p>
+            </div>
+        </div>
+
+        <!-- Code Example -->
+        <h2 class="section-title">Implementation Example</h2>
+
+        <div class="code-block">
+# Auto-Discovery Installer Pattern
+# File: setup/doctypes/YourDocType.py
+
+doctype = {
+    "name": "Your DocType",
+    "fields": [
+        {
+            "fieldname": "field_name",
+            "fieldtype": "Data",
+            "label": "Field Label",
+            "reqd": 1
+        }
+        # Add more fields...
+    ],
+    "permissions": [
+        {
+            "role": "Store Manager",
+            "read": 1,
+            "write": 1,
+            "create": 1
+        }
+    ]
+}
+
+# That's it! The system automatically discovers and installs this DocType
+# when you run: bench --site your-site.local migrate
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-nav">
+        <div class="footer-nav-content">
+            <div class="footer-nav-grid">
+                <div class="footer-nav-section">
+                    <h4>Project</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="index.html">Dashboard</a></li>
+                        <li><a href="doctypes.html">DocTypes</a></li>
+                        <li><a href="architecture.html">Architecture</a></li>
+                        <li><a href="roadmap.html">Roadmap</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="api.html">API</a></li>
+                        <li><a href="testing.html">Testing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Resources</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://github.com/zahidprinters/technical-store-system" target="_blank">GitHub Repository</a></li>
+                        <li><a href="https://frappeframework.com" target="_blank">Frappe Framework</a></li>
+                        <li><a href="https://erpnext.com" target="_blank">ERPNext</a></li>
+                        <li><a href="https://docs.frappeframework.com" target="_blank">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-section">
+                    <h4>Community</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="https://discuss.frappe.io" target="_blank">Frappe Discuss</a></li>
+                        <li><a href="https://github.com/frappe" target="_blank">GitHub</a></li>
+                        <li><a href="https://frappe.school" target="_blank">Frappe School</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <i class="fas fa-code"></i>
+                    Technical Store System - Complete DocTypes Reference |
+                    <a href="https://github.com/zahidprinters/technical-store-system" target="_blank">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a> |
+                    Updated: December 11, 2025
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
