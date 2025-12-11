@@ -233,6 +233,16 @@ def create_default_roles():
 				"role_name": "Store Viewer",
 				"desk_access": 1,
 				"description": "Read-only access to all Store data"
+			},
+			{
+				"role_name": "Dev User",
+				"desk_access": 1,
+				"description": "Development and testing environment access"
+			},
+			{
+				"role_name": "Installer User",
+				"desk_access": 1,
+				"description": "Installation and deployment permissions"
 			}
 		]
 		
